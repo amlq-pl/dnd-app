@@ -2,7 +2,7 @@ import { ThemedText, ThemedView } from "@/components/themed";
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet } from "react-native";
-import CharacterSheets from "./CharacterSheet";
+import CharacterSheets from "./(tabs)/character-sheet";
 
 export default function LandingScreen() {
     const router = useRouter();

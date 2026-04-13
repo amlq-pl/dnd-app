@@ -1,9 +1,10 @@
-import { View, type ViewProps, StyleSheet, Pressable } from "react-native";
+import { View, type ViewProps, StyleSheet, Pressable, Platform } from "react-native";
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { ThemedText } from "./ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 
 import {ListEntry} from '@/types/lists'
+import COLORS from "@/constants/colors";
 
 export interface ThemedListProps extends ViewProps {
     title?: string;
@@ -22,14 +23,14 @@ export function ThemedList({
     style,
     ...rest
 }: ThemedListProps) {
-    const { theme } = useAppTheme();
+    const { theme, color } = useAppTheme();
 
     return (
         <View style={[styles.container, style]} {...rest}>
             {/* Header */}
             {title && (
                 <View style={styles.header}>
-                    {icon && <Ionicons name={icon as any} size={20} color={theme.colors.secondary} />}
+                    {icon && <Ionicons name={icon as any} size={20} color={"palette.primary"} />}
                     <ThemedText variant="label" style={styles.titleText}>
                         {title}
                     </ThemedText>
@@ -48,11 +49,11 @@ export function ThemedList({
                                     item.state === "active" && styles.bulletGlow
                                 ]}
                             />
-                            <ThemedText variant="body" color="neutral" style={styles.skillLabel}>
+                            <ThemedText variant="body" color={"palette.primary"} style={styles.skillLabel}>
                                 {item.label}
                             </ThemedText>
                         </View>
-                        <ThemedText variant="label" color="secondary" style={styles.skillValue}>
+                        <ThemedText variant="label" color={"palette.secondary"} style={styles.skillValue}>
                             {item.value}
                         </ThemedText>
                     </View>
@@ -62,7 +63,7 @@ export function ThemedList({
             {/* Footer Action */}
             {footerLabel && (
                 <Pressable onPress={onFooterPress} style={styles.footer}>
-                    <ThemedText variant="body" color="tertiary" style={styles.footerText}>
+                    <ThemedText variant="body" color="palette.tertiary" style={styles.footerText}>
                         {footerLabel.toUpperCase()}
                     </ThemedText>
                 </Pressable>
