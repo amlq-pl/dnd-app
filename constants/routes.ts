@@ -53,6 +53,13 @@ export const TAB_ROUTES: readonly RouteDefinition[] = [
         icon: "star",
         iconOutline: "star-outline",
         href: "/features",
+    },
+    {
+        name: "character-sheet",
+        title: "Character Sheet",
+        icon: "document-text",
+        iconOutline: "document-text-outline",
+        href: "/character-sheet",
     }
 ] as const;
 

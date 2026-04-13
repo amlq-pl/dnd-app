@@ -39,7 +39,7 @@ export default function MainSheetScreen() {
     const displayedSkills = isExpanded ? skills : skills.slice(0, 5);
 
     return (
-        <ThemedView style={styles.screen} backgroundColor="neutral">
+        <ThemedView style={styles.screen}>
             <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContentContainer}>
 
                 {/* AVATAR & HEADER SECTION */}
@@ -78,7 +78,7 @@ export default function MainSheetScreen() {
 }
 
 const styles = StyleSheet.create({
-    screen: { flex: 1 ,marginBottom: 20 },
+    screen: { flex: 1 ,marginBottom: 20, marginTop: 35},
     scrollView: { flex: 1 },
     scrollContentContainer: { padding: 16, gap: 20},
     features: {

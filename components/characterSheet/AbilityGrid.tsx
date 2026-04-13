@@ -23,14 +23,14 @@ export const AbilityGrid = ({ characterId }: { characterId: string }) => {
             renderItem={({ key, label }) => (
                 <ThemedTextBox style={styles.abilityCard}>
                     <View>
-                        <ThemedText variant="body" color="tertiary" style={styles.abilityLabel}>
+                        <ThemedText variant="body" color="palette.tertiary" style={styles.abilityLabel}>
                             {label}
                         </ThemedText>
                         <ThemedText variant="headline" style={styles.abilityScore}>
                             {scores[key].score}
                         </ThemedText>
                     </View>
-                    <ThemedText variant="headline" color="secondary" style={styles.abilityMod}>
+                    <ThemedText variant="headline" color="palette.secondary" style={styles.abilityMod}>
                         {scores[key].mod}
                     </ThemedText>
                 </ThemedTextBox>

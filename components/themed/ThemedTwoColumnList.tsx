@@ -29,12 +29,12 @@ export function ThemedTwoColumnList({
 
     const renderItem = (item: ListItem, index: number) => (
         <View key={index} style={styles.itemRow}>
-            <ThemedText variant="body" color="neutral" style={styles.label}>
+            <ThemedText variant="body" color="palette.primary" style={styles.label}>
                 {item.label}
             </ThemedText>
             <ThemedText
                 variant="label"
-                color={item.highlight ? "secondary" : "tertiary"}
+                color={item.highlight ? "palette.secondary" : "palette.tertiary"}
                 style={styles.value}
             >
                 {item.value}
@@ -46,7 +46,7 @@ export function ThemedTwoColumnList({
         <View style={[styles.container, style]} {...rest}>
             {(Icon || title) && (
                 <View style={styles.header}>
-                    {Icon && <Icon size={22} color={theme.colors.secondary} />}
+                    {Icon && <Icon size={22} color={"palette.primary"} />}
 
                     {title && (
                         <ThemedText variant="label" style={styles.titleText}>

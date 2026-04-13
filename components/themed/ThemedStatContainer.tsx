@@ -5,7 +5,7 @@ import { ThemedTextBox } from "./ThemedTextBox";
 
 export interface ThemedStatContainerProps {
     label: string;
-    value?: string;
+    value?: string | number;
     style?: ViewStyle | ViewStyle[];
     size?: "regular" | "compact";
     mode?: "stacked" | "pill";

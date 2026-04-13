@@ -23,15 +23,15 @@ export const Header = ({ characterId }: { characterId: string }) => {
         {/* TODO: add external glow to the image */}
 
         <View style={styles.headerPills}>
-            <ThemedStatContainer label="LEVEL" value={character?.level} mode="pill" backgroundColor="primary" />
-            <ThemedStatContainer label="CLASS" value={character?.class.toUpperCase()} mode="pill" backgroundColor="tertiary" />
+            <ThemedStatContainer label="LEVEL" value={character?.level} mode="pill" backgroundColor="palette.primary" />
+            <ThemedStatContainer label="CLASS" value={character?.class.toUpperCase()} mode="pill" backgroundColor="palette.tertiary" />
         </View>
         <ThemedHeadline style={styles.heroName}>{character?.name}</ThemedHeadline>
 
         <View style={styles.vitalsRow}>
-            <ThemedText variant="label" color="secondary"> <InspirationIcon /> INSPIRATION: {character?.inspiration}</ThemedText>
-            <ThemedText variant="label" color="secondary"> <ACIcon /> AC: {character?.ac}</ThemedText>
-            <ThemedText variant="label" color="secondary"> <HPIcon /> HP: {character?.hp.current}/{character?.hp.max}</ThemedText>
+            <ThemedText variant="label" color="palette.secondary"> <InspirationIcon /> INSPIRATION: {character?.inspiration}</ThemedText>
+            <ThemedText variant="label" color="palette.secondary"> <ACIcon /> AC: {character?.ac}</ThemedText>
+            <ThemedText variant="label" color="palette.secondary"> <HPIcon /> HP: {character?.hp.current}/{character?.hp.max}</ThemedText>
         </View>
     </View>
 }

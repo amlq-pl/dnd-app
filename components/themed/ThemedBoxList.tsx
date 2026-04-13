@@ -31,14 +31,14 @@ export function ThemedBoxList({ title, data, style, itemStyle, ...rest }: Themed
                     <ThemedTextBox key={index} style={[styles.itemBox, itemStyle, item.style]}>
                         {/* Optional Accent Line (as seen in the image) */}
                         {item.accentColor && (
-                            <View style={[styles.accentLine, { backgroundColor: theme.colors.primary }]} />
+                            <View style={[styles.accentLine, { backgroundColor: "palette.primary" }]} />
                         )}
 
                         <View style={styles.textContainer}>
-                            <ThemedText variant="label" color="secondary" style={styles.itemTitle}>
+                            <ThemedText variant="label" color="palette.secondary" style={styles.itemTitle}>
                                 {item.title}
                             </ThemedText>
-                            <ThemedText variant="body" color="tertiary" style={styles.itemDescription}>
+                            <ThemedText variant="body" color="palette.tertiary" style={styles.itemDescription}>
                                 {item.description}
                             </ThemedText>
                         </View>
