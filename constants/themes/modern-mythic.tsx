@@ -6,7 +6,7 @@ export const modernMythicTheme: AppTheme = {
   mode: "dark",
   colors: {
     primary: "#8B5CF6",
-    secondary: "#FFD700",
+    secondary: "#FFE16D", // #FFD700"
     tertiary: "#C084FC",
     neutral: "#121212",
   },
