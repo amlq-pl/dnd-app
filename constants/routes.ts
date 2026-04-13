@@ -47,6 +47,13 @@ export const TAB_ROUTES: readonly RouteDefinition[] = [
         iconOutline: "sparkles-outline",
         href: "/spells",
     },
+    {
+        name: "features",
+        title: "Features",
+        icon: "star",
+        iconOutline: "star-outline",
+        href: "/features",
+    }
 ] as const;
 
 export function getRouteByName(name: string): RouteDefinition | undefined {
