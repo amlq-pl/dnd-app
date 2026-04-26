@@ -21,7 +21,7 @@ export const AbilityGrid = ({ characterId }: { characterId: string }) => {
             rowGap={12}
             columnGap={12}
             renderItem={({ key, label }) => (
-                <BoxWithGlow glow={true}>
+                <BoxWithGlow glow={true} glowColor="card.glow">
                     <View>
                         <ThemedText variant="body" color="card.header" style={styles.abilityLabel}>
                             {label.toUpperCase()}

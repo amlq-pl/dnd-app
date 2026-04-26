@@ -46,3 +46,27 @@ export interface CharacterInfo {
     abilityScores: AbilityScores
     proficientSaves: AbilityKey[];
 }
+export interface BiometricEntry {
+    key: keyof CharacterBiometrics;
+    label: string;
+    value: string;
+}
+export interface CharacterBiometrics {
+    alignment: string,
+    gender: string,
+    eyes: string,
+    size: string,
+    height: string,
+    age: string,
+    faith: string,
+    skin: string,
+};
+
+export interface CharacterValues {
+    background: string,
+    personalityTraits: Array<string>,
+    ideals: Array<string>,
+    bonds: Array<string>,
+    flaws: Array<string>
+
+}

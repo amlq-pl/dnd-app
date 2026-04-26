@@ -24,8 +24,8 @@ export const Header = ({ characterId }: { characterId: string }) => {
 
         {/** TODO:  fix these colors */}
         <View style={styles.headerPills}>
-            <ThemedStatContainer label="LEVEL" value={character?.level} mode="pill" backgroundColor="palette.primary" labelColor="text.heading" />
-            <ThemedStatContainer label="CLASS" value={character?.class.toUpperCase()} mode="pill" backgroundColor="card.background" labelColor="text.heading" />
+            <ThemedStatContainer label="LEVEL:" value={character?.level} mode="pill" backgroundColor="buttonPrimary.background" labelColor="buttonPrimary.text" />
+            <ThemedStatContainer label="CLASS:" value={character?.class.toUpperCase()} mode="pill" backgroundColor="buttonSecondary.background" labelColor="buttonSecondary.text" />
         </View>
         <ThemedHeadline color="text.heading" style={styles.heroName}>{character?.name}</ThemedHeadline>
 

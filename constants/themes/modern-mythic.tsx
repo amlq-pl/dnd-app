@@ -19,6 +19,7 @@ export const modernMythicTheme: AppTheme = {
             surface: COLORS.darkNavy,
             surfaceElevated: COLORS.darkSlate,
             overlay: COLORS.overlayBlack,
+            note: COLORS.uglyGrey,
         },
 
         text: {
@@ -29,6 +30,7 @@ export const modernMythicTheme: AppTheme = {
             onPrimary: COLORS.white,
             onSecondary: COLORS.black,
             onTertiary: COLORS.black,
+            note: COLORS.lightPurple,
         },
 
         border: {
@@ -51,7 +53,18 @@ export const modernMythicTheme: AppTheme = {
             note: COLORS.subduedLila,
             glow: COLORS.lila,
             softGlow: COLORS.subduedLila
-        }
+        },
+        buttonPrimary: {
+            background: COLORS.lessDirtyPurple,
+            text: COLORS.lightLila,
+            border: COLORS.dirtyPurple
+        },
+        buttonSecondary: {
+            background: COLORS.milky,
+            text: COLORS.almostBlack,
+            border: COLORS.dirtyYellow
+
+        },
     },
 
     // ── Typography ────────────────────────────────────────────────────────

@@ -3,6 +3,7 @@ import { View, StyleSheet, type ViewProps, type ViewStyle } from "react-native";
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { ThemedText } from "./ThemedText";
 import { BoxWithGlow } from "../BoxWithGlow";
+import { ThemeColorKey } from "@/constants/themes";
 
 export interface BoxListItem {
     title: string;
@@ -15,37 +16,39 @@ export interface ThemedBoxListProps extends ViewProps {
     title: string;
     data: BoxListItem[];
     itemStyle?: ViewStyle;
+    glowColor?: ThemeColorKey
 }
 
-export function ThemedBoxList({ title, data, style, itemStyle, ...rest }: ThemedBoxListProps) {
+export function ThemedBoxList({ title, data, style, itemStyle, glowColor = "card.glow", ...rest }: ThemedBoxListProps) {
     const { theme } = useAppTheme();
 
     return (
         <View style={[styles.container, style]} {...rest}>
-            {/* List Header */}
             <ThemedText
-                variant="label"
-                style={styles.listTitle}
-                color="text.heading"
-            >
-                {title}
-            </ThemedText>
+            variant="label"
+            style={styles.listTitle}
+            color="text.heading"
+        >
+            {title}
+        </ThemedText>
 
             <View style={styles.stack}>
                 {data.map((item, index) => (
                     <BoxWithGlow
                         key={`${item.title}-${index}`}
-                        glow={false}
+                        glow={glowColor ? true : false}
                         style={[styles.itemBox, itemStyle, item.style]}
+                        glowColor={glowColor}
                     >
                         <View style={styles.textContainer}>
-                            <ThemedText
+                            {item.title.trim().length > 0 && (<ThemedText
                                 variant="label"
                                 color="text.heading"
                                 style={styles.itemTitle}
                             >
                                 {item.title}
-                            </ThemedText>
+                            </ThemedText>)}
+
                             <ThemedText
                                 variant="body"
                                 color="text.heading"
@@ -71,12 +74,9 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     stack: {
-        // Modern React Native (0.71+) supports gap for Flexbox
         gap: 12,
     },
     itemBox: {
-        // BoxWithGlow already provides height: 80, padding, and borderRadius.
-        // We ensure it occupies full width here.
         width: "100%",
     },
     textContainer: {

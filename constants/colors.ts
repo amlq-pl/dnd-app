@@ -14,6 +14,7 @@ const COLORS = {
     grey: '#1C1B1B',
     lightGrey: '#353534',
     almostBlack: '#1C1B1B',
+    uglyGrey: '#35353499',
 
     // ── Text ─────────────────────────────────────────────────────
     white: "#FFFFFF",
@@ -23,6 +24,12 @@ const COLORS = {
     subduedLila: '#958EA0',
     lightLila: '#D0BCFF',
 
+    // Buttons:
+    dirtyPurple: '#d0bcff1a',
+    lessDirtyPurple: '#A078FFCC',
+
+    dirtyYellow: '#ffdb3c33',
+    milky: '#ffe16d',
 
     // ── Borders ──────────────────────────────────────────────────
     lavenderFaint: "rgba(192, 132, 252, 0.08)",

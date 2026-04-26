@@ -21,7 +21,9 @@ export interface ThemeSurfaceColors {
     surface: string;
     surfaceElevated: string;
     overlay: string;
+    note: string;
 }
+
 
 /** Text & icon colors. */
 export interface ThemeTextColors {
@@ -32,6 +34,7 @@ export interface ThemeTextColors {
     onPrimary: string;
     onSecondary: string;
     onTertiary: string;
+    note: string
 }
 
 /** Borders, dividers, outlines. */
@@ -39,6 +42,12 @@ export interface ThemeBorderColors {
     default: string;
     subtle: string;
     strong: string;
+}
+
+export interface ThemeButtonColors {
+    background: string;
+    text: string;
+    border: string;
 }
 
 export interface ThemeCardColors {
@@ -64,7 +73,9 @@ export interface ThemeColors {
     text: ThemeTextColors;
     border: ThemeBorderColors;
     semantic: ThemeSemanticColors;
-    card: ThemeCardColors
+    card: ThemeCardColors;
+    buttonPrimary: ThemeButtonColors;
+    buttonSecondary: ThemeButtonColors;
 }
 
 
@@ -76,7 +87,9 @@ export type ThemeColorKey =
     | `text.${keyof ThemeTextColors}`
     | `border.${keyof ThemeBorderColors}`
     | `semantic.${keyof ThemeSemanticColors}`
-    | `card.${keyof ThemeCardColors}`;
+    | `card.${keyof ThemeCardColors}`
+    | `buttonPrimary.${keyof ThemeButtonColors}`
+    | `buttonSecondary.${keyof ThemeButtonColors}`;
 
 // ---------------------------------------------------------------------------
 // Typography

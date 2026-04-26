@@ -1,3 +1,5 @@
 export * from './useAbilities'
 export * from './useCharacter'
 export * from './useSavingThrows'
+export * from './useBiometrics'
+export * from './useValues'
