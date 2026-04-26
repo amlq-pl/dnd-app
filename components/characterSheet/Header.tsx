@@ -3,9 +3,11 @@ import { Image, StyleSheet, View, ActivityIndicator } from "react-native";
 
 import { InspirationIcon, ACIcon, HPIcon } from "@/components/icons";
 import { useCharacter } from "@/hooks/character";
+import { useAppTheme } from "@/hooks/useAppTheme";
 
 export const Header = ({ characterId }: { characterId: string }) => {
     const { character, isLoading } = useCharacter(characterId);
+    const { color } = useAppTheme();
 
     if (isLoading || !character) return <ActivityIndicator />;
 
@@ -35,13 +37,14 @@ export const Header = ({ characterId }: { characterId: string }) => {
 
             <View style={styles.vitalsRow}>
                 <ThemedText color="palette.secondary" variant="label">
-                    <InspirationIcon /> INSPIRATION: {character?.inspiration}
+                    <InspirationIcon color={color("palette.secondary")} /> INSPIRATION:{" "}
+                    {character?.inspiration}
                 </ThemedText>
                 <ThemedText color="text.muted" variant="label">
-                    <ACIcon /> AC: {character?.ac}
+                    <ACIcon color="white" /> AC: {character?.ac}
                 </ThemedText>
                 <ThemedText color="text.muted" variant="label">
-                    <HPIcon /> HP: {character?.hp.current}/{character?.hp.max}
+                    <HPIcon color="white" /> HP: {character?.hp.current}/{character?.hp.max}
                 </ThemedText>
             </View>
         </View>

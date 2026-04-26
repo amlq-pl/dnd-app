@@ -2,14 +2,13 @@ import { ThemedText, ThemedView } from "@/components/themed";
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet } from "react-native";
-import CharacterSheets from "./(tabs)/character-sheet";
 
 export default function LandingScreen() {
     const router = useRouter();
     const { color } = useAppTheme();
 
     return (
-        <ThemedView backgroundColor="surface.background" style={styles.screen}>
+        <ThemedView backgroundColor={color("surface.background")} style={styles.screen}>
             <ThemedText color="text.heading" variant="headline">
                 Welcome, Adventurer
             </ThemedText>

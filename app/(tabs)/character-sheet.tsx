@@ -1,7 +1,7 @@
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { useState } from "react";
 
-import { ThemedView, ThemedList, ThemedBoxList, BoxListItem } from "@/components/themed";
+import { ThemedView, ThemedList, ThemedBoxList } from "@/components/themed";
 import { ThemedTwoColumnList } from "@/components/themed/ThemedTwoColumnList";
 import { AbilityGrid } from "@/components/characterSheet/AbilityGrid";
 import { Header } from "@/components/characterSheet/Header";
@@ -13,7 +13,7 @@ import { useSkills } from "@/hooks/useAbilities";
 import { useClassFeatures } from "@/hooks/useClassFeatures";
 
 export default function MainSheetScreen() {
-    const { theme } = useAppTheme();
+    const { color } = useAppTheme();
 
     const characterId = "val-001";
 
@@ -38,8 +38,8 @@ export default function MainSheetScreen() {
     return (
         <ThemedView style={styles.screen}>
             <ScrollView
-                style={styles.scrollView}
                 contentContainerStyle={styles.scrollContentContainer}
+                style={styles.scrollView}
             >
                 {/* AVATAR & HEADER SECTION */}
                 <Header characterId={characterId} />
@@ -48,24 +48,43 @@ export default function MainSheetScreen() {
                 <AbilityGrid characterId={characterId} />
 
                 {/* SAVING THROWS*/}
-                <ThemedTwoColumnList
-                    title="Saving Throws"
-                    icon={SavingThrowsIcon}
-                    data={savingThrows}
-                />
+                <View
+                    style={{
+                        backgroundColor: color("surface.surface"),
+                        borderRadius: 12,
+                        padding: 12,
+                    }}
+                >
+                    <ThemedTwoColumnList
+                        data={savingThrows}
+                        icon={SavingThrowsIcon}
+                        title="Saving Throws"
+                    />
+                </View>
 
-                <ThemedList
-                    title="Skills"
-                    icon="list"
-                    data={displayedSkills}
-                    footerLabel={isExpanded ? "Show Less" : "View All Skills"}
-                    onFooterPress={() => setIsExpanded(!isExpanded)}
-                />
+                <View
+                    style={{
+                        backgroundColor: color("surface.surface"),
+                        borderRadius: 12,
+                        padding: 12,
+                        gap: 12,
+                    }}
+                >
+                    <ThemedList
+                        data={displayedSkills}
+                        footerLabel={isExpanded ? "Show Less" : "View All Skills"}
+                        icon="list"
+                        title="Skills"
+                        onFooterPress={() => setIsExpanded(!isExpanded)}
+                    />
+                </View>
                 {/** //TODO: we probably want to animate the expansion movement */}
 
                 {/** //TODO: Add combat section here. Consider if it should not belong to another page*/}
 
-                <ThemedBoxList title="Key Features" data={features} />
+                <View>
+                    <ThemedBoxList data={features} title="Key Features" />
+                </View>
             </ScrollView>
         </ThemedView>
     );

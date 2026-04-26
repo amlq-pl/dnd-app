@@ -3,7 +3,7 @@ import { useAppTheme } from "@/hooks/useAppTheme";
 import { ThemedText } from "./ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 
-import {ListEntry} from '@/types/lists'
+import { ListEntry } from "@/types/lists";
 import COLORS from "@/constants/colors";
 
 export interface ThemedListProps extends ViewProps {
@@ -30,8 +30,10 @@ export function ThemedList({
             {/* Header */}
             {title && (
                 <View style={styles.header}>
-                    {icon && <Ionicons name={icon as any} size={20} color={"palette.primary"} />}
-                    <ThemedText variant="label" style={styles.titleText}>
+                    {icon && (
+                        <Ionicons color={color("palette.primary")} name={icon as any} size={20} />
+                    )}
+                    <ThemedText style={styles.titleText} variant="label">
                         {title}
                     </ThemedText>
                 </View>
@@ -45,15 +47,28 @@ export function ThemedList({
                             <View
                                 style={[
                                     styles.bullet,
-                                    { backgroundColor: item.state === "active" ? "#FDE047" : "#374151" },
-                                    item.state === "active" && styles.bulletGlow
+                                    {
+                                        backgroundColor:
+                                            item.state === "active"
+                                                ? color("palette.secondary")
+                                                : color("text.muted"),
+                                    },
+                                    item.state === "active" && styles.bulletGlow,
                                 ]}
                             />
-                            <ThemedText variant="body" color={"palette.primary"} style={styles.skillLabel}>
+                            <ThemedText
+                                color={"palette.primary"}
+                                style={styles.skillLabel}
+                                variant="body"
+                            >
                                 {item.label}
                             </ThemedText>
                         </View>
-                        <ThemedText variant="label" color={"palette.secondary"} style={styles.skillValue}>
+                        <ThemedText
+                            color={"palette.secondary"}
+                            style={styles.skillValue}
+                            variant="label"
+                        >
                             {item.value}
                         </ThemedText>
                     </View>
@@ -62,8 +77,8 @@ export function ThemedList({
 
             {/* Footer Action */}
             {footerLabel && (
-                <Pressable onPress={onFooterPress} style={styles.footer}>
-                    <ThemedText variant="body" color="palette.tertiary" style={styles.footerText}>
+                <Pressable style={styles.footer} onPress={onFooterPress}>
+                    <ThemedText color="palette.tertiary" style={styles.footerText} variant="body">
                         {footerLabel.toUpperCase()}
                     </ThemedText>
                 </Pressable>

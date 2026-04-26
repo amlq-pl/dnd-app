@@ -17,7 +17,7 @@ export const AbilityGrid = ({ characterId }: { characterId: string }) => {
             columns={2}
             data={ABILITY_LABELS}
             renderItem={({ key, label }) => (
-                <HighlightedView style={styles.abilityCard}>
+                <HighlightedView backgroundGlow style={styles.abilityCard}>
                     <View>
                         <ThemedText color="text.muted" style={styles.abilityLabel} variant="body">
                             {label}

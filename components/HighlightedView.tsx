@@ -1,11 +1,13 @@
 import { useAppTheme } from "@/hooks/useAppTheme";
 import type { ReactNode } from "react";
-import { StyleSheet, View, type ViewStyle } from "react-native";
+import { Platform, StyleSheet, View, type ViewStyle } from "react-native";
 
 export interface HighlightedViewProps {
     children: ReactNode;
     backgroundColor?: string;
     glowColor?: string;
+    /** Adds a soft ambient glow behind the entire card. */
+    backgroundGlow?: boolean;
     style?: ViewStyle | (ViewStyle | undefined)[];
 }
 
@@ -29,12 +31,18 @@ export default function HighlightedView({
     children,
     backgroundColor,
     glowColor,
+    backgroundGlow = false,
     style,
 }: HighlightedViewProps) {
     const { theme, color } = useAppTheme();
 
     const resolvedBg = backgroundColor ?? color("surface.surface");
-    const resolvedGlow = glowColor ?? color("border.default");
+    const resolvedGlow = glowColor ?? color("palette.tertiary");
+
+    const webGlow =
+        backgroundGlow && Platform.OS === "web"
+            ? ({ boxShadow: `0 0 12px rgba(192, 132, 252, 0.12)` } as unknown as ViewStyle)
+            : {};
 
     return (
         <View
@@ -46,6 +54,7 @@ export default function HighlightedView({
                     borderRadius: theme.borderRadius.md,
                     shadowColor: resolvedGlow,
                 },
+                webGlow,
                 style,
             ]}
         >
