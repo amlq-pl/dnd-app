@@ -67,11 +67,11 @@ const MOCK_VALUES: CharacterValues = {
     ]
 }
 
-// TODO: change photoUri to  "https://tcs.uj.edu.pl/image/journal/article?img_id=155559922&t=1709833578358"
+// TODO: change photoUri to  " "https://i.redd.it/zmk36tvpv5n51.jpg"
 const MOCK_CHARACTER: CharacterInfo = {
     id: "val-001",
     name: "Valerius the Bold",
-    photoUri: "https://i.redd.it/zmk36tvpv5n51.jpg",
+    photoUri:  "https://tcs.uj.edu.pl/image/journal/article?img_id=155559922&t=1709833578358",
     level: 12,
     class: "Paladin",
     race: "Elf",
