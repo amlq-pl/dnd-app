@@ -28,6 +28,7 @@ export interface ThemeTextColors {
     heading: string;
     body: string;
     muted: string;
+    lively: string;
     onPrimary: string;
     onSecondary: string;
     onTertiary: string;
@@ -38,6 +39,15 @@ export interface ThemeBorderColors {
     default: string;
     subtle: string;
     strong: string;
+}
+
+export interface ThemeCardColors {
+    background: string,
+    header: string,
+    label: string,
+    note: string,
+    glow: string,
+    softGlow: string,
 }
 
 /** Semantic / feedback colours. */
@@ -54,7 +64,10 @@ export interface ThemeColors {
     text: ThemeTextColors;
     border: ThemeBorderColors;
     semantic: ThemeSemanticColors;
+    card: ThemeCardColors
 }
+
+
 
 /** Union of every colour key path that components might reference. */
 export type ThemeColorKey =
@@ -62,7 +75,8 @@ export type ThemeColorKey =
     | `surface.${keyof ThemeSurfaceColors}`
     | `text.${keyof ThemeTextColors}`
     | `border.${keyof ThemeBorderColors}`
-    | `semantic.${keyof ThemeSemanticColors}`;
+    | `semantic.${keyof ThemeSemanticColors}`
+    | `card.${keyof ThemeCardColors}`;
 
 // ---------------------------------------------------------------------------
 // Typography

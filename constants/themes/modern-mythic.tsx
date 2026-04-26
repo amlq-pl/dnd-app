@@ -11,7 +11,7 @@ export const modernMythicTheme: AppTheme = {
         palette: {
             primary: COLORS.violet,
             secondary: COLORS.gold,
-            tertiary: COLORS.lavender,
+            tertiary: COLORS.lila,
         },
 
         surface: {
@@ -25,6 +25,7 @@ export const modernMythicTheme: AppTheme = {
             heading: COLORS.white,
             body: COLORS.lightGray,
             muted: COLORS.mutedGray,
+            lively: COLORS.lightLila,
             onPrimary: COLORS.white,
             onSecondary: COLORS.black,
             onTertiary: COLORS.black,
@@ -42,6 +43,15 @@ export const modernMythicTheme: AppTheme = {
             error: COLORS.red,
             info: COLORS.blue,
         },
+
+        card: {
+            background: COLORS.almostBlack,
+            header: COLORS.subduedLila,
+            label: COLORS.white,
+            note: COLORS.subduedLila,
+            glow: COLORS.lila,
+            softGlow: COLORS.subduedLila
+        }
     },
 
     // ── Typography ────────────────────────────────────────────────────────

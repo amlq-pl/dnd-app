@@ -30,8 +30,8 @@ export function ThemedList({
             {/* Header */}
             {title && (
                 <View style={styles.header}>
-                    {icon && <Ionicons name={icon as any} size={20} color={"palette.primary"} />}
-                    <ThemedText variant="label" style={styles.titleText}>
+                    {icon && <Ionicons name={icon as any} size={20} color={color("palette.tertiary")} />}
+                    <ThemedText variant="label" style={styles.titleText} color="text.heading">
                         {title}
                     </ThemedText>
                 </View>
@@ -49,11 +49,11 @@ export function ThemedList({
                                     item.state === "active" && styles.bulletGlow
                                 ]}
                             />
-                            <ThemedText variant="body" color={"palette.primary"} style={styles.skillLabel}>
+                            <ThemedText variant="body" color="text.heading" style={styles.skillLabel}>
                                 {item.label}
                             </ThemedText>
                         </View>
-                        <ThemedText variant="label" color={"palette.secondary"} style={styles.skillValue}>
+                        <ThemedText variant="label" color="text.lively" style={styles.skillValue}>
                             {item.value}
                         </ThemedText>
                     </View>
@@ -63,7 +63,7 @@ export function ThemedList({
             {/* Footer Action */}
             {footerLabel && (
                 <Pressable onPress={onFooterPress} style={styles.footer}>
-                    <ThemedText variant="body" color="palette.tertiary" style={styles.footerText}>
+                    <ThemedText variant="body" color="text.lively" style={styles.footerText}>
                         {footerLabel.toUpperCase()}
                     </ThemedText>
                 </Pressable>

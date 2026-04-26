@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
     ThemedView,
     ThemedList,
-    ThemedBoxList, BoxListItem
+    ThemedBoxList,
 } from "@/components/themed";
 import { ThemedTwoColumnList } from "@/components/themed/ThemedTwoColumnList";
 import { AbilityGrid } from "@/components/characterSheet/AbilityGrid";

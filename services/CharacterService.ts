@@ -19,15 +19,16 @@ const MOCK_ABILITIES: AbilityScores = {
 };
 
 export const ABILITY_LABELS: Array<{ key: AbilityKey; label: string }> = [
-    { key: "STR", label: "STRENGTH" },
-    { key: "DEX", label: "DEXTERITY" },
-    { key: "CON", label: "CONSTITUTION" },
-    { key: "INT", label: "INTELLIGENCE" },
-    { key: "WIS", label: "WISDOM" },
-    { key: "CHA", label: "CHARISMA" },
+    { key: "STR", label: "Strength" },
+    { key: "DEX", label: "Dexterity" },
+    { key: "CON", label: "Constitution" },
+    { key: "INT", label: "Intelligence" },
+    { key: "WIS", label: "Wisdom" },
+    { key: "CHA", label: "Charisma" },
 ];
 
 
+// TODO: change photoUri to  "https://tcs.uj.edu.pl/image/journal/article?img_id=155559922&t=1709833578358"
 const MOCK_CHARACTER: CharacterInfo = {
     id: "val-001",
     name: "Valerius the Bold",

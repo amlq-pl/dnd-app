@@ -2,16 +2,16 @@ import React from "react";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
 import {
     ThemedGrid,
-    ThemedText,
-    ThemedTextBox
+    ThemedText
 } from "@/components/themed";
+import { BoxWithGlow } from ".././BoxWithGlow";
 import { useAbilities } from "@/hooks/character/useAbilities";
 import { ABILITY_LABELS } from "@/services/CharacterService";
+
 
 export const AbilityGrid = ({ characterId }: { characterId: string }) => {
     const { data: scores, loading } = useAbilities(characterId);
 
-    // TODO: consider changing it
     if (loading || !scores) return <ActivityIndicator />;
 
     return (
@@ -21,51 +21,38 @@ export const AbilityGrid = ({ characterId }: { characterId: string }) => {
             rowGap={12}
             columnGap={12}
             renderItem={({ key, label }) => (
-                <ThemedTextBox style={styles.abilityCard}>
+                <BoxWithGlow glow={true}>
                     <View>
-                        <ThemedText variant="body" color="palette.tertiary" style={styles.abilityLabel}>
-                            {label}
+                        <ThemedText variant="body" color="card.header" style={styles.abilityLabel}>
+                            {label.toUpperCase()}
                         </ThemedText>
-                        <ThemedText variant="headline" style={styles.abilityScore}>
+                        <ThemedText variant="headline" color="card.label" style={styles.abilityScore}>
                             {scores[key].score}
                         </ThemedText>
                     </View>
-                    <ThemedText variant="headline" color="palette.secondary" style={styles.abilityMod}>
+                    <ThemedText variant="headline" color="card.note" style={styles.abilityMod}>
                         {scores[key].mod}
                     </ThemedText>
-                </ThemedTextBox>
+                </BoxWithGlow>
             )}
         />
     );
 };
 
-
 const styles = StyleSheet.create({
-    abilityCard: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        height: 80,
-        paddingHorizontal: 12,
-
-        backgroundColor: '#1C1B1B',
-        borderRadius: 12,
-
-        borderLeftWidth: 2,
-        borderLeftColor: '#D0BCFF',
-
-        shadowColor: '#D0BCFF',
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.1,
-        shadowRadius: 15,
-
-        elevation: 4,
+    abilityLabel: {
+        fontSize: 10,
+        fontWeight: '700',
     },
-
-    abilityLabel: { fontSize: 10, fontWeight: '700', color: '#958EA0', fontFamily: 'Manrope', },
-    abilityScore: { fontSize: 30 },
-    abilityMod: { fontSize: 20, fontWeight: '600'},
+    abilityScore: {
+        fontSize: 30
+    },
+    abilityMod: {
+        fontSize: 20,
+        fontWeight: '600'
+    },
 });
 
-// TODO: extract colors, fonts to a config file
 
+// TODO: Change the glow and font color when the ability must be underlined
+// TODO: Change the font for the score to "Noto Serif"

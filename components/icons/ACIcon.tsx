@@ -1,20 +1,19 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
-import { useAppTheme } from '@/hooks/useAppTheme'; // Assuming you have a theme hook
-
+import { useAppTheme } from '@/hooks/useAppTheme';
+import type { ThemeColorKey } from "@/constants/themes";
 interface IconProps {
     size?: number;
-    color?: string;
+    color?: ThemeColorKey;
 }
 
 export const ACIcon: React.FC<IconProps> = ({
     size = 12,
-    color
+    color: colorKey = "palette.secondary"
 }) => {
-    const { theme } = useAppTheme();
+    const { theme, color } = useAppTheme();
 
-    // TODO: add fallback theme color here
-    const iconColor = color || "#FFE16D";
+    const iconColor = color(colorKey);
 
     return (
         <Svg width={size} height={size} viewBox="0 0 12 12" fill="none">
