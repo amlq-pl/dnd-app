@@ -1,10 +1,7 @@
 import React from "react";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
-import {
-    ThemedGrid,
-    ThemedText,
-    ThemedTextBox
-} from "@/components/themed";
+import { ThemedGrid, ThemedText } from "@/components/themed";
+import HighlightedView from "@/components/HighlightedView";
 import { useAbilities } from "@/hooks/character/useAbilities";
 import { ABILITY_LABELS } from "@/services/CharacterService";
 
@@ -16,56 +13,41 @@ export const AbilityGrid = ({ characterId }: { characterId: string }) => {
 
     return (
         <ThemedGrid
-            data={ABILITY_LABELS}
-            columns={2}
-            rowGap={12}
             columnGap={12}
+            columns={2}
+            data={ABILITY_LABELS}
             renderItem={({ key, label }) => (
-                <ThemedTextBox style={styles.abilityCard}>
+                <HighlightedView style={styles.abilityCard}>
                     <View>
-                        <ThemedText variant="body" color="palette.tertiary" style={styles.abilityLabel}>
+                        <ThemedText color="text.muted" style={styles.abilityLabel} variant="body">
                             {label}
                         </ThemedText>
-                        <ThemedText variant="headline" style={styles.abilityScore}>
+                        <ThemedText style={styles.abilityScore} variant="headline">
                             {scores[key].score}
                         </ThemedText>
                     </View>
-                    <ThemedText variant="headline" color="palette.secondary" style={styles.abilityMod}>
+                    <ThemedText
+                        color="palette.secondary"
+                        style={styles.abilityMod}
+                        variant="headline"
+                    >
                         {scores[key].mod}
                     </ThemedText>
-                </ThemedTextBox>
+                </HighlightedView>
             )}
+            rowGap={12}
         />
     );
 };
 
-
 const styles = StyleSheet.create({
     abilityCard: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
         height: 80,
-        paddingHorizontal: 12,
-
-        backgroundColor: '#1C1B1B',
-        borderRadius: 12,
-
-        borderLeftWidth: 2,
-        borderLeftColor: '#D0BCFF',
-
-        shadowColor: '#D0BCFF',
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.1,
-        shadowRadius: 15,
-
-        elevation: 4,
     },
-
-    abilityLabel: { fontSize: 10, fontWeight: '700', color: '#958EA0', fontFamily: 'Manrope', },
+    abilityLabel: {
+        fontSize: 10,
+        fontWeight: "700",
+    },
     abilityScore: { fontSize: 30 },
-    abilityMod: { fontSize: 20, fontWeight: '600'},
+    abilityMod: { fontSize: 20, fontWeight: "600" },
 });
-
-// TODO: extract colors, fonts to a config file
-

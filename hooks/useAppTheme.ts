@@ -3,7 +3,6 @@ import {
     getThemeById,
     resolveColor,
     type AppTheme,
-    type ThemeColorKey,
     type ThemeId,
 } from "@/constants/themes";
 import { useMemo } from "react";
@@ -16,8 +15,8 @@ export interface UseAppThemeResult {
     themeId: ThemeId;
     theme: AppTheme;
     mode: AppTheme["mode"];
-    /** Resolve a dot-path colour key, e.g. `color("palette.primary")`. */
-    color: (key: ThemeColorKey) => string;
+    /** Resolve a theme key (e.g. `"palette.primary"`) or pass through a raw colour string. */
+    color: (key: string) => string;
     setThemeId: (nextThemeId: ThemeId) => void;
 }
 
@@ -26,7 +25,7 @@ export function useAppTheme(options?: UseAppThemeOptions): UseAppThemeResult {
 
     const theme = useMemo(() => getThemeById(activeThemeId), [activeThemeId]);
 
-    const color = (key: ThemeColorKey) => resolveColor(theme.colors, key);
+    const color = (key: string) => resolveColor(theme.colors, key);
 
     const setThemeId = (_nextThemeId: ThemeId) => {
         // Placeholder for future state/context-backed theme switching.

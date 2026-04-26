@@ -1,9 +1,9 @@
-import type { ThemeBorderRadiusKey, ThemeColorKey } from "@/constants/themes";
+import type { ThemeBorderRadiusKey } from "@/constants/themes";
 import { StyleSheet, type ViewProps } from "react-native";
 import { ThemedView } from "./ThemedView";
 
 export interface ThemedTextBoxProps extends ViewProps {
-    backgroundColor?: ThemeColorKey;
+    backgroundColor?: string;
     borderRadius?: ThemeBorderRadiusKey;
 }
 

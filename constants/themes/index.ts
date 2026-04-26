@@ -131,9 +131,12 @@ export interface AppTheme {
 // ---------------------------------------------------------------------------
 
 /**
- * Resolve a dot-path colour key like `"palette.primary"` to its actual value.
+ * Resolve a colour value. If the string looks like a theme key (contains a dot,
+ * e.g. `"palette.primary"`), it is resolved from the theme. Otherwise the raw
+ * colour string is returned as-is (e.g. `"#FF0000"`, `"red"`, `"rgba(…)"`).
  */
-export function resolveColor(colors: ThemeColors, key: ThemeColorKey): string {
+export function resolveColor(colors: ThemeColors, key: string): string {
+    if (!key.includes(".")) return key;
     const [group, token] = key.split(".") as [keyof ThemeColors, string];
     return (colors[group] as unknown as Record<string, string>)[token];
 }

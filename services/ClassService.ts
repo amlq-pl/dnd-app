@@ -9,14 +9,12 @@ const CLASS_REGISTRY: Record<string, ClassFeature[]> = {
             requiredLevel: 1,
             title: "Lay on Hands",
             description: "Healing pool: 60/60 points remaining. Use action to touch and heal.",
-            accentColor: false,
         },
         {
             id: "pala-06",
             requiredLevel: 6,
             title: "Aura of Protection",
             description: "You and friendly creatures within 10 feet gain a +5 bonus to all saving throws.",
-            accentColor: false,
         },
     ],
 };

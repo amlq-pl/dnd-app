@@ -1,4 +1,3 @@
-import type { ThemeColorKey } from "@/constants/themes";
 import { StyleSheet, type ViewStyle } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { ThemedTextBox } from "./ThemedTextBox";
@@ -9,9 +8,9 @@ export interface ThemedStatContainerProps {
     style?: ViewStyle | ViewStyle[];
     size?: "regular" | "compact";
     mode?: "stacked" | "pill";
-    backgroundColor?: ThemeColorKey;
-    labelColor?: ThemeColorKey;
-    valueColor?: ThemeColorKey;
+    backgroundColor?: string;
+    labelColor?: string;
+    valueColor?: string;
 }
 
 export function ThemedStatContainer({

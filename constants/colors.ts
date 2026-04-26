@@ -6,6 +6,7 @@ const COLORS = {
 
     // ── Surfaces ─────────────────────────────────────────────────
     black: "#121212",
+    darkCharcoal: "#1C1B1B",
     darkNavy: "#1E1E2E",
     darkSlate: "#2A2A3C",
     overlayBlack: "rgba(0, 0, 0, 0.55)",

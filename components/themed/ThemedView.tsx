@@ -1,10 +1,10 @@
-import type { ThemeBorderRadiusKey, ThemeColorKey } from "@/constants/themes";
+import type { ThemeBorderRadiusKey } from "@/constants/themes";
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { View, type ViewProps, type ViewStyle } from "react-native";
 
 export interface ThemedViewProps extends ViewProps {
-    backgroundColor?: ThemeColorKey;
-    borderColor?: ThemeColorKey;
+    backgroundColor?: string;
+    borderColor?: string;
     borderRadius?: ThemeBorderRadiusKey;
 }
 
