@@ -15,8 +15,8 @@ export const modernMythicTheme: AppTheme = {
         },
 
         surface: {
-            background: COLORS.black,
-            surface: COLORS.darkNavy,
+            background: COLORS.backgroundGrey,
+            surface: COLORS.darkCharcoal,
             surfaceElevated: COLORS.darkSlate,
             overlay: COLORS.overlayBlack,
         },

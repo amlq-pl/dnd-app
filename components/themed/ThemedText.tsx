@@ -1,4 +1,3 @@
-import type { ThemeColorKey } from "@/constants/themes";
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { Text, type TextProps, type TextStyle } from "react-native";
 
@@ -29,7 +28,7 @@ const VARIANT_FONT_KEY = {
 
 export interface ThemedTextProps extends TextProps {
     variant?: TextVariant;
-    color?: ThemeColorKey;
+    color?: string;
 }
 
 export function ThemedText({ style, variant = "body", color: colorKey, ...rest }: ThemedTextProps) {
@@ -41,8 +40,8 @@ export function ThemedText({ style, variant = "body", color: colorKey, ...rest }
                 VARIANT_STYLE[variant],
                 {
                     fontFamily: theme.typography[VARIANT_FONT_KEY[variant]],
+                    color: color(colorKey ?? "text.body"),
                 },
-                colorKey ? { color: color(colorKey) } : null,
                 style,
             ]}
             {...rest}

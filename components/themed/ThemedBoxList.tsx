@@ -1,48 +1,62 @@
-import { View, StyleSheet, type ViewProps, ViewStyle } from "react-native";
+import { View, StyleSheet, type ViewProps, type ViewStyle } from "react-native";
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { ThemedText } from "./ThemedText";
-import { ThemedTextBox } from "@/components/themed"; // Reusing your existing box component
+import HighlightedView from "@/components/HighlightedView";
 
 export interface BoxListItem {
     title: string;
     description: string;
-    accentColor?: boolean; // Toggle for that purple side-accent
-    style?: ViewStyle
+    style?: ViewStyle;
 }
 
 export interface ThemedBoxListProps extends ViewProps {
     title: string;
     data: BoxListItem[];
     itemStyle?: ViewStyle;
+    glowColor?: string;
 }
 
-export function ThemedBoxList({ title, data, style, itemStyle, ...rest }: ThemedBoxListProps) {
-    const { theme } = useAppTheme();
+export function ThemedBoxList({
+    title,
+    data,
+    style,
+    itemStyle,
+    glowColor,
+    ...rest
+}: ThemedBoxListProps) {
+    const { color } = useAppTheme();
 
     return (
         <View style={[styles.container, style]} {...rest}>
-            {/* Formal Header */}
-            <ThemedText variant="label" style={styles.listTitle}>
+            <ThemedText style={styles.listTitle} variant="label">
                 {title}
             </ThemedText>
 
             <View style={styles.stack}>
                 {data.map((item, index) => (
-                    <ThemedTextBox key={index} style={[styles.itemBox, itemStyle, item.style]}>
-                        {/* Optional Accent Line (as seen in the image) */}
-                        {item.accentColor && (
-                            <View style={[styles.accentLine, { backgroundColor: "palette.primary" }]} />
-                        )}
-
+                    <HighlightedView
+                        key={index}
+                        backgroundColor={color("surface.surface")}
+                        glowColor={glowColor ?? color("palette.tertiary")}
+                        style={[styles.itemBox, itemStyle, item.style]}
+                    >
                         <View style={styles.textContainer}>
-                            <ThemedText variant="label" color="palette.secondary" style={styles.itemTitle}>
+                            <ThemedText
+                                color="palette.secondary"
+                                style={styles.itemTitle}
+                                variant="label"
+                            >
                                 {item.title}
                             </ThemedText>
-                            <ThemedText variant="body" color="palette.tertiary" style={styles.itemDescription}>
+                            <ThemedText
+                                color="palette.tertiary"
+                                style={styles.itemDescription}
+                                variant="body"
+                            >
                                 {item.description}
                             </ThemedText>
                         </View>
-                    </ThemedTextBox>
+                    </HighlightedView>
                 ))}
             </View>
         </View>
@@ -60,17 +74,11 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     stack: {
-        gap: 12, // Vertical spacing between text boxes
+        gap: 12,
     },
     itemBox: {
-        flexDirection: "row",
-        padding: 0, // Let the content container handle padding for alignment
-        overflow: "hidden",
         minHeight: 90,
-    },
-    accentLine: {
-        width: 4,
-        height: "100%",
+        overflow: "hidden",
     },
     textContainer: {
         flex: 1,
