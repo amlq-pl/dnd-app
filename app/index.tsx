@@ -3,6 +3,7 @@ import { useAppTheme } from "@/hooks/useAppTheme";
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet } from "react-native";
 import CharacterSheets from "./(tabs)/character-sheet";
+import CharacteristicsScreen from "./(tabs)/characteristics";
 
 export default function LandingScreen() {
     const router = useRouter();

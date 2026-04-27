@@ -42,7 +42,7 @@ export function ThemedStatContainer({
                 ]}
                 variant="body"
             >
-                {isPill ? `${label}${value ? `: ${value}` : ""}` : label.toUpperCase()}
+                {isPill ? `${label}${value ? ` ${value}` : ""}` : label.toUpperCase()}
             </ThemedText>
             {!isPill ? (
                 <ThemedText

@@ -22,16 +22,17 @@ export const Header = ({ characterId }: { characterId: string }) => {
         />
         {/* TODO: add external glow to the image */}
 
+        {/** TODO:  fix these colors */}
         <View style={styles.headerPills}>
-            <ThemedStatContainer label="LEVEL" value={character?.level} mode="pill" backgroundColor="palette.primary" />
-            <ThemedStatContainer label="CLASS" value={character?.class.toUpperCase()} mode="pill" backgroundColor="palette.tertiary" />
+            <ThemedStatContainer label="LEVEL:" value={character?.level} mode="pill" backgroundColor="buttonPrimary.background" labelColor="buttonPrimary.text" />
+            <ThemedStatContainer label="CLASS:" value={character?.class.toUpperCase()} mode="pill" backgroundColor="buttonSecondary.background" labelColor="buttonSecondary.text" />
         </View>
-        <ThemedHeadline style={styles.heroName}>{character?.name}</ThemedHeadline>
+        <ThemedHeadline color="text.heading" style={styles.heroName}>{character?.name}</ThemedHeadline>
 
         <View style={styles.vitalsRow}>
             <ThemedText variant="label" color="palette.secondary"> <InspirationIcon /> INSPIRATION: {character?.inspiration}</ThemedText>
-            <ThemedText variant="label" color="palette.secondary"> <ACIcon /> AC: {character?.ac}</ThemedText>
-            <ThemedText variant="label" color="palette.secondary"> <HPIcon /> HP: {character?.hp.current}/{character?.hp.max}</ThemedText>
+            <ThemedText variant="label" color="text.muted"> <ACIcon color="text.muted" /> AC: {character?.ac}</ThemedText>
+            <ThemedText variant="label" color="text.muted"> <HPIcon color="text.muted"/> HP: {character?.hp.current}/{character?.hp.max}</ThemedText>
         </View>
     </View>
 }

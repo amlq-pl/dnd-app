@@ -4,22 +4,19 @@ import { useState } from "react";
 import {
     ThemedView,
     ThemedList,
-    ThemedBoxList, BoxListItem
+    ThemedBoxList,
 } from "@/components/themed";
 import { ThemedTwoColumnList } from "@/components/themed/ThemedTwoColumnList";
 import { AbilityGrid } from "@/components/characterSheet/AbilityGrid";
 import { Header } from "@/components/characterSheet/Header"
 import { SavingThrowsIcon } from "@/components/icons";
 
-import { useAppTheme } from "@/hooks/useAppTheme";
 import { useCharacter, useSavingThrows } from "@/hooks/character";
 import { useSkills } from "@/hooks/useAbilities";
 import { useClassFeatures } from "@/hooks/useClassFeatures";
 
 
 export default function MainSheetScreen() {
-    const { theme } = useAppTheme();
-
     const characterId = "val-001"
 
     const [isExpanded, setIsExpanded] = useState(false);

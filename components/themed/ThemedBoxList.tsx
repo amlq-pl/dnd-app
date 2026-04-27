@@ -1,48 +1,63 @@
-import { View, StyleSheet, type ViewProps, ViewStyle } from "react-native";
+import React from "react";
+import { View, StyleSheet, type ViewProps, type ViewStyle } from "react-native";
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { ThemedText } from "./ThemedText";
-import { ThemedTextBox } from "@/components/themed"; // Reusing your existing box component
+import { BoxWithGlow } from "../BoxWithGlow";
+import { ThemeColorKey } from "@/constants/themes";
 
 export interface BoxListItem {
     title: string;
     description: string;
-    accentColor?: boolean; // Toggle for that purple side-accent
-    style?: ViewStyle
+    accentColor?: boolean; // Maps to the 'glow' prop of BoxWithGlow
+    style?: ViewStyle;
 }
 
 export interface ThemedBoxListProps extends ViewProps {
     title: string;
     data: BoxListItem[];
     itemStyle?: ViewStyle;
+    glowColor?: ThemeColorKey
 }
 
-export function ThemedBoxList({ title, data, style, itemStyle, ...rest }: ThemedBoxListProps) {
+export function ThemedBoxList({ title, data, style, itemStyle, glowColor = "card.glow", ...rest }: ThemedBoxListProps) {
     const { theme } = useAppTheme();
 
     return (
         <View style={[styles.container, style]} {...rest}>
-            {/* Formal Header */}
-            <ThemedText variant="label" style={styles.listTitle}>
-                {title}
-            </ThemedText>
+            <ThemedText
+            variant="label"
+            style={styles.listTitle}
+            color="text.heading"
+        >
+            {title}
+        </ThemedText>
 
             <View style={styles.stack}>
                 {data.map((item, index) => (
-                    <ThemedTextBox key={index} style={[styles.itemBox, itemStyle, item.style]}>
-                        {/* Optional Accent Line (as seen in the image) */}
-                        {item.accentColor && (
-                            <View style={[styles.accentLine, { backgroundColor: "palette.primary" }]} />
-                        )}
-
+                    <BoxWithGlow
+                        key={`${item.title}-${index}`}
+                        glow={glowColor ? true : false}
+                        style={[styles.itemBox, itemStyle, item.style]}
+                        glowColor={glowColor}
+                    >
                         <View style={styles.textContainer}>
-                            <ThemedText variant="label" color="palette.secondary" style={styles.itemTitle}>
+                            {item.title.trim().length > 0 && (<ThemedText
+                                variant="label"
+                                color="text.heading"
+                                style={styles.itemTitle}
+                            >
                                 {item.title}
-                            </ThemedText>
-                            <ThemedText variant="body" color="palette.tertiary" style={styles.itemDescription}>
+                            </ThemedText>)}
+
+                            <ThemedText
+                                variant="body"
+                                color="text.heading"
+                                style={styles.itemDescription}
+                            >
                                 {item.description}
                             </ThemedText>
                         </View>
-                    </ThemedTextBox>
+                    </BoxWithGlow>
                 ))}
             </View>
         </View>
@@ -56,25 +71,16 @@ const styles = StyleSheet.create({
     },
     listTitle: {
         fontSize: 26,
-        fontFamily: "serif",
         marginBottom: 16,
     },
     stack: {
-        gap: 12, // Vertical spacing between text boxes
+        gap: 12,
     },
     itemBox: {
-        flexDirection: "row",
-        padding: 0, // Let the content container handle padding for alignment
-        overflow: "hidden",
-        minHeight: 90,
-    },
-    accentLine: {
-        width: 4,
-        height: "100%",
+        width: "100%",
     },
     textContainer: {
         flex: 1,
-        padding: 16,
         justifyContent: "center",
     },
     itemTitle: {
