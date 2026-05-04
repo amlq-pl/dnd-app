@@ -11,6 +11,7 @@ The app stores user accounts, character sheets, reusable character catalogs, and
 | `users` | User accounts. Default-user today, Google/Apple OAuth later. |
 | `races` | Searchable catalog of official and custom races. |
 | `classes` | Searchable catalog of official and custom classes. |
+| `subclasses` | Subclass options grouped under each class. |
 | `user_races` | Races a user has added to their account. |
 | `user_classes` | Classes a user has added to their account. |
 | `characters` | One row per character, owned by a user. |
@@ -41,6 +42,7 @@ graph LR
     users[users] -->|"owns"| characters[characters]
     races[races] -->|"selected by"| characters
     classes[classes] -->|"selected by"| characters
+    classes -->|"has many"| subclasses[subclasses]
     users -->|"adds"| user_races[user_races]
     races -->|"added through"| user_races
     users -->|"adds"| user_classes[user_classes]
@@ -53,6 +55,7 @@ graph LR
 
 - A `user` has many `characters`.
 - A `character` chooses one `race` and one `class`.
+- A `class` has many `subclasses`.
 - A `character` has many `character_spell_slots`, `character_items`, and `character_spells`.
 - A `spell` can be learned by many characters via `character_spells`.
 - `races` and `classes` are searchable catalogs. Official rows are global. Custom rows can be found and added to a user's account via `user_races` and `user_classes`.
@@ -261,6 +264,7 @@ CREATE TABLE classes (
   id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name               TEXT NOT NULL,
   short_description  TEXT NOT NULL,
+  subclass_level     SMALLINT NOT NULL DEFAULT 3 CHECK (subclass_level BETWEEN 1 AND 20),
   is_official        BOOLEAN NOT NULL DEFAULT false,
   created_by_user_id UUID REFERENCES users(id) ON DELETE SET NULL,
   created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -283,6 +287,23 @@ CREATE UNIQUE INDEX classes_official_name_unique
 ```
 
 Official class names are unique. Custom class names are allowed to collide.
+
+## `subclasses`
+
+Subclass catalog grouped by class.
+
+```sql
+CREATE TABLE subclasses (
+  class_id           UUID NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+  subclass_id        UUID NOT NULL DEFAULT gen_random_uuid(),
+  name               TEXT NOT NULL,
+  short_description  TEXT NOT NULL,
+  PRIMARY KEY (class_id, subclass_id)
+);
+
+CREATE INDEX subclasses_class_id_idx ON subclasses (class_id);
+CREATE INDEX subclasses_name_idx ON subclasses (lower(name));
+```
 
 ### RLS policies
 
@@ -310,6 +331,11 @@ CREATE POLICY classes_delete_own_custom ON classes
     created_by_user_id = auth.uid()
     AND is_official = false
   );
+
+ALTER TABLE subclasses ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY subclasses_select_authenticated ON subclasses
+  FOR SELECT USING (auth.role() = 'authenticated');
 ```
 
 ## `user_races`
@@ -382,6 +408,7 @@ CREATE TABLE characters (
   user_id            UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   race_id            UUID NOT NULL REFERENCES races(id),
   class_id           UUID NOT NULL REFERENCES classes(id),
+  subclass_id        UUID,
   name               TEXT NOT NULL,
   photo_uri          TEXT,
   str_score          SMALLINT NOT NULL CHECK (str_score BETWEEN 1 AND 30),
@@ -419,7 +446,8 @@ CREATE TABLE characters (
   silver             INTEGER NOT NULL DEFAULT 0 CHECK (silver >= 0),
   copper             INTEGER NOT NULL DEFAULT 0 CHECK (copper >= 0),
   created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+  updated_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+  FOREIGN KEY (class_id, subclass_id) REFERENCES subclasses(class_id, subclass_id)
 );
 
 CREATE TRIGGER set_updated_at
@@ -429,11 +457,13 @@ CREATE TRIGGER set_updated_at
 CREATE INDEX characters_user_id_idx ON characters (user_id);
 CREATE INDEX characters_race_id_idx ON characters (race_id);
 CREATE INDEX characters_class_id_idx ON characters (class_id);
+CREATE INDEX characters_subclass_id_idx ON characters (subclass_id);
 ```
 
 ### Column notes
 
 - `race_id` / `class_id` - selected catalog rows. The app should only allow official rows or rows added to the user's account through `user_races` / `user_classes`.
+- `subclass_id` - optional at character creation. When present, it must belong to the selected `class_id`.
 - `name`, `photo_uri` - header data shown on the character sheet.
 - `*_score` - raw ability scores 1-30. Ability modifiers are computed in app code via `Math.floor((score - 10) / 2)`.
 - `proficient_saves` - enum array of ability saves for which the character is proficient.
