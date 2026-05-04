@@ -545,10 +545,10 @@ CREATE TABLE characters (
   faith              TEXT NOT NULL,
   skin               TEXT NOT NULL,
   background         TEXT NOT NULL,
-  personality_traits TEXT NOT NULL,
-  bonds              TEXT NOT NULL,
-  ideals             TEXT NOT NULL,
-  flaws              TEXT NOT NULL,
+  personality_traits TEXT[] NOT NULL DEFAULT '{}',
+  bonds              TEXT[] NOT NULL DEFAULT '{}',
+  ideals             TEXT[] NOT NULL DEFAULT '{}',
+  flaws              TEXT[] NOT NULL DEFAULT '{}',
   gold               INTEGER NOT NULL DEFAULT 0 CHECK (gold >= 0),
   silver             INTEGER NOT NULL DEFAULT 0 CHECK (silver >= 0),
   copper             INTEGER NOT NULL DEFAULT 0 CHECK (copper >= 0),
@@ -579,6 +579,7 @@ CREATE INDEX characters_subclass_id_idx ON characters (subclass_id);
 - `proficiency_bonus` - stored to allow homebrew or feature-driven overrides.
 - `armor_class`, `inspiration`, `initiative`, `speed` - sheet stats stored as final values.
 - `alignment` - one of the nine D&D alignments: `lawful_good`, `neutral_good`, `chaotic_good`, `lawful_neutral`, `true_neutral`, `chaotic_neutral`, `lawful_evil`, `neutral_evil`, `chaotic_evil`.
+- `personality_traits`, `bonds`, `ideals`, `flaws` - arrays of text lines from the character background (often rolled from tables or entered one entry per row).
 - `gold`, `silver`, `copper` - coin counts. Currency stays on `characters` because it is one-to-one character state.
 
 ### RLS policies
