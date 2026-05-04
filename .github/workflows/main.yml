@@ -1,0 +1,57 @@
+name: Expo CI + Vercel Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Cache Expo + Metro
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.expo
+            node_modules/.cache
+          key: ${{ runner.os }}-expo-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-expo-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Expo prebuild (no install)
+        run: npx expo prebuild --no-install
+
+  deploy:
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Vercel Deployment Hook
+        run: |
+          curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_UBKOP0qX1UE4FCJx6qyFe1gfhSGk/mmZmnGUlkT"
