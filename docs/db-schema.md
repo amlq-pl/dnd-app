@@ -39,6 +39,13 @@ The app stores user accounts, character sheets, reusable character catalogs, and
 - Computed game values (saving-throw totals, skill modifiers, etc.) are **not** stored. They are derived in app code from ability scores, level, and proficiency lists. Only the inputs are persisted.
 - Row-level security (RLS) is enabled on every table in the exposed `public` schema.
 
+## Migrations
+
+- Every schema change lives in `supabase/migrations/<UTC-yyyymmddHHMMSS>_<snake_case_description>.sql` **before** it is applied to any database. The filename layout matches what the Supabase CLI expects, so `supabase migration up` / `supabase db pull` can be adopted later without renaming.
+- Apply each file via the Supabase MCP `execute_sql` (or `supabase db query` once the CLI is wired up) so the SQL on disk is byte-for-byte what runs against the database.
+- After applying, run `get_advisors` (security + performance) and address any flagged issues.
+- **Never** edit a previously-applied migration. Write a follow-up file (the next UTC timestamp, descriptive name like `harden_users_rls_and_function.sql`) and apply it the same way.
+
 ## Entity relationships
 
 ```mermaid
@@ -1100,3 +1107,4 @@ Notes:
 - Class-feature data (currently a static registry in `services/ClassService.ts`); promote to tables when needed.
 - `item_transfers` table and the QR-code transfer flow described under [Planned features](#qr-code-item-transfer).
 - `pg_cron` job for expiring stale `item_transfers` rows.
+- See [local-state.md](local-state.md) for how the app caches and syncs these tables on-device.
