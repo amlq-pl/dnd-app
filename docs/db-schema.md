@@ -12,9 +12,13 @@ The app stores user accounts, character sheets, reusable character catalogs, and
 | `races` | Searchable catalog of official and custom races. |
 | `classes` | Searchable catalog of official and custom classes. |
 | `subclasses` | Subclass options grouped under each class. |
+| `features` | Catalog of class/subclass/race/character features. |
 | `user_races` | Races a user has added to their account. |
 | `user_classes` | Classes a user has added to their account. |
 | `characters` | One row per character, owned by a user. |
+| `character_features` | Features assigned to a character over time. |
+| `v_character_features` | Read view of assigned features by character. |
+| `v_character_levelup_available_features` | Read view of level-up eligible class/subclass features by character. |
 | `character_spell_slots` | Per-character spell slot pools by level. |
 | `character_items` | Inventory items owned by a character. |
 | `spells` | Shared spell catalog. |
@@ -43,10 +47,15 @@ graph LR
     races[races] -->|"selected by"| characters
     classes[classes] -->|"selected by"| characters
     classes -->|"has many"| subclasses[subclasses]
+    classes -->|"grants"| features[features]
+    subclasses -->|"grants"| features
+    races[races] -->|"grants"| features
     users -->|"adds"| user_races[user_races]
     races -->|"added through"| user_races
     users -->|"adds"| user_classes[user_classes]
     classes -->|"added through"| user_classes
+    characters -->|"has many"| character_features[character_features]
+    features -->|"assigned through"| character_features
     characters -->|"has many"| character_spell_slots[character_spell_slots]
     characters -->|"has many"| character_items[character_items]
     characters -->|"learns many"| character_spells[character_spells]
@@ -56,9 +65,11 @@ graph LR
 - A `user` has many `characters`.
 - A `character` chooses one `race` and one `class`.
 - A `class` has many `subclasses`.
+- `features` belongs to exactly one origin: class, subclass, race, or character-scoped.
+- A `character` has many `character_features`.
 - A `character` has many `character_spell_slots`, `character_items`, and `character_spells`.
 - A `spell` can be learned by many characters via `character_spells`.
-- `races` and `classes` are searchable catalogs. Official rows are global. Custom rows can be found and added to a user's account via `user_races` and `user_classes`.
+- `races`, `classes`, and `features` are searchable catalogs. Official rows are global. Custom rows are user-owned.
 
 ## Shared infrastructure
 
@@ -103,9 +114,13 @@ CREATE TYPE alignment AS ENUM (
 );
 
 CREATE TYPE item_transfer_status AS ENUM ('pending', 'consumed', 'expired');
+
+CREATE TYPE feature_origin_type AS ENUM ('class', 'subclass', 'race', 'character');
+
+CREATE TYPE feature_assignment_source AS ENUM ('creation', 'level_up', 'adventure');
 ```
 
-`races` and `classes` are intentionally tables, not enums, because players can create custom entries.
+`races`, `classes`, and `features` are intentionally tables, not enums, because players can create custom entries.
 
 ### `update_updated_at()` trigger function
 
@@ -338,6 +353,98 @@ CREATE POLICY subclasses_select_authenticated ON subclasses
   FOR SELECT USING (auth.role() = 'authenticated');
 ```
 
+## `features`
+
+Catalog of official and homebrew features. Every row has exactly one origin type (`class`, `subclass`, `race`, or `character`).
+
+```sql
+CREATE TABLE features (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name                TEXT NOT NULL,
+  description         TEXT NOT NULL,
+  origin_type         feature_origin_type NOT NULL,
+  class_id            UUID REFERENCES classes(id) ON DELETE CASCADE,
+  subclass_id         UUID,
+  race_id             UUID REFERENCES races(id) ON DELETE CASCADE,
+  min_character_level SMALLINT CHECK (min_character_level BETWEEN 1 AND 20),
+  is_official         BOOLEAN NOT NULL DEFAULT false,
+  created_by_user_id  UUID REFERENCES users(id) ON DELETE SET NULL,
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  FOREIGN KEY (class_id, subclass_id) REFERENCES subclasses(class_id, subclass_id),
+  CHECK (
+    (origin_type = 'class' AND class_id IS NOT NULL AND subclass_id IS NULL AND race_id IS NULL)
+    OR (origin_type = 'subclass' AND class_id IS NOT NULL AND subclass_id IS NOT NULL AND race_id IS NULL)
+    OR (origin_type = 'race' AND class_id IS NULL AND subclass_id IS NULL AND race_id IS NOT NULL)
+    OR (origin_type = 'character' AND class_id IS NULL AND subclass_id IS NULL AND race_id IS NULL)
+  ),
+  CHECK (
+    (
+      origin_type IN ('class', 'subclass')
+      AND min_character_level IS NOT NULL
+    )
+    OR (
+      origin_type IN ('race', 'character')
+      AND min_character_level IS NULL
+    )
+  )
+);
+
+CREATE TRIGGER set_updated_at
+  BEFORE UPDATE ON features
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+```
+
+### Indexes
+
+```sql
+CREATE INDEX features_origin_type_idx ON features (origin_type);
+CREATE INDEX features_name_idx ON features (lower(name));
+CREATE INDEX features_class_id_idx ON features (class_id);
+CREATE INDEX features_subclass_key_idx ON features (class_id, subclass_id);
+CREATE INDEX features_race_id_idx ON features (race_id);
+
+CREATE UNIQUE INDEX features_official_origin_name_unique
+  ON features (
+    origin_type,
+    COALESCE(class_id, '00000000-0000-0000-0000-000000000000'::uuid),
+    COALESCE(subclass_id, '00000000-0000-0000-0000-000000000000'::uuid),
+    COALESCE(race_id, '00000000-0000-0000-0000-000000000000'::uuid),
+    lower(name)
+  )
+  WHERE is_official;
+```
+
+Official features are unique per origin + origin owner + name. Homebrew names are allowed to collide.
+
+### RLS policies
+
+```sql
+ALTER TABLE features ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY features_select_authenticated ON features
+  FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY features_insert_custom ON features
+  FOR INSERT WITH CHECK (
+    auth.role() = 'authenticated'
+    AND created_by_user_id = auth.uid()
+    AND is_official = false
+  );
+
+CREATE POLICY features_update_own_custom ON features
+  FOR UPDATE USING (
+    created_by_user_id = auth.uid()
+    AND is_official = false
+  );
+
+CREATE POLICY features_delete_own_custom ON features
+  FOR DELETE USING (
+    created_by_user_id = auth.uid()
+    AND is_official = false
+  );
+```
+
 ## `user_races`
 
 Join table for races added to a user's account.
@@ -518,6 +625,112 @@ CREATE POLICY characters_update_own ON characters
 CREATE POLICY characters_delete_own ON characters
   FOR DELETE USING (user_id = auth.uid());
 ```
+
+## `character_features`
+
+Join table for features attached to a character. Attachments happen at creation, during level-up, or later in the adventure.
+
+```sql
+CREATE TABLE character_features (
+  character_id     UUID NOT NULL REFERENCES characters(id) ON DELETE CASCADE,
+  feature_id       UUID NOT NULL REFERENCES features(id) ON DELETE CASCADE,
+  assigned_source  feature_assignment_source NOT NULL,
+  assigned_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (character_id, feature_id)
+);
+
+CREATE INDEX character_features_feature_id_idx ON character_features (feature_id);
+CREATE INDEX character_features_character_id_idx ON character_features (character_id);
+```
+
+### RLS policies
+
+```sql
+ALTER TABLE character_features ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY character_features_select_own ON character_features
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM characters
+      WHERE characters.id = character_id
+        AND characters.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY character_features_insert_own ON character_features
+  FOR INSERT WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM characters
+      WHERE characters.id = character_id
+        AND characters.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY character_features_delete_own ON character_features
+  FOR DELETE USING (
+    EXISTS (
+      SELECT 1 FROM characters
+      WHERE characters.id = character_id
+        AND characters.user_id = auth.uid()
+    )
+  );
+```
+
+The app/service must still validate feature eligibility before insert (origin match, subclass match, and level requirement).
+
+## `v_character_features`
+
+Resolved feature list per character. Use this view to query what a character currently has.
+
+```sql
+CREATE VIEW v_character_features AS
+SELECT
+  cf.character_id,
+  f.id AS feature_id,
+  f.name AS feature_name,
+  f.description AS feature_description,
+  f.origin_type,
+  f.class_id,
+  f.subclass_id,
+  f.race_id,
+  f.min_character_level,
+  cf.assigned_source,
+  cf.assigned_at
+FROM character_features cf
+JOIN features f ON f.id = cf.feature_id;
+```
+
+## `v_character_levelup_available_features`
+
+Eligible class/subclass features for manual level-up selection, excluding already assigned rows.
+
+```sql
+CREATE VIEW v_character_levelup_available_features AS
+SELECT
+  c.id AS character_id,
+  f.id AS feature_id,
+  f.name,
+  f.description,
+  f.origin_type,
+  f.class_id,
+  f.subclass_id,
+  f.min_character_level
+FROM characters c
+JOIN features f
+  ON f.origin_type IN ('class', 'subclass')
+  AND f.class_id = c.class_id
+  AND (
+    f.origin_type = 'class'
+    OR (f.origin_type = 'subclass' AND c.subclass_id IS NOT NULL AND f.subclass_id = c.subclass_id)
+  )
+  AND c.level >= f.min_character_level
+LEFT JOIN character_features cf
+  ON cf.character_id = c.id
+  AND cf.feature_id = f.id
+WHERE cf.feature_id IS NULL;
+```
+
+Use this view in the level-up UI to show selectable feature options for each character.
 
 ## `character_spell_slots`
 
