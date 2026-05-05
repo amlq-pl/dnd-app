@@ -1,7 +1,6 @@
 import { ThemedHeadline, ThemedView } from "@/components/themed";
 import { ThemedFeatureContainer, type Feature } from "@/components/themed/ThemedFeatureContainer";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { useAppTheme } from "@/hooks/useAppTheme";
 const FEATURES: Feature[] = [
     {
         name: "Divine Smite",
@@ -21,15 +20,13 @@ const FEATURES: Feature[] = [
         name: "Fighting Style: Defense",
         tag: "Fighting Style",
         shortDescription: "While you are wearing armor, you gain a +1 bonus to AC.",
-        description:
-             "While you are wearing armor, you gain a +1 bonus to AC.",
+        description: "While you are wearing armor, you gain a +1 bonus to AC.",
     },
     {
         name: "Divine Health",
         tag: "Paladin Feature",
         shortDescription: "Immunity to disease.",
-        description:
-            "You are immune to disease.",
+        description: "You are immune to disease.",
     },
     {
         name: "Channel Divinity: Sacred Weapon",
@@ -44,15 +41,16 @@ const FEATURES: Feature[] = [
         shortDescription: "Use your Channel Divinity to frighten fiends and undead.",
         description:
             "As an action, you can use your Channel Divinity to utter ancient words that are painful for fiends and undead to hear. Each fiend or undead that can hear you within 30 feet of you must make a Wisdom saving throw. If the creature fails its saving throw, it is turned for 1 minute or until it takes damage.",
-    }
+    },
 ];
-
 
 export default function FeaturesAndTraitsScreen() {
     return (
         <ThemedView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContent}>
-                <ThemedHeadline color="text.heading" style={styles.headline}>Your Features</ThemedHeadline>
+                <ThemedHeadline color="text.heading" style={styles.headline}>
+                    Your Features
+                </ThemedHeadline>
                 <View style={styles.list}>
                     {FEATURES.map((feature) => (
                         <ThemedFeatureContainer key={feature.name} feature={feature} />

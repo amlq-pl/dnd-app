@@ -14,7 +14,7 @@ export const useSkills = (character: CharacterInfo | null) => {
             setSkills(data);
             setIsLoading(false);
         });
-    }, [character?.id]);
+    }, [character]);
 
     return { skills, isLoading };
 };

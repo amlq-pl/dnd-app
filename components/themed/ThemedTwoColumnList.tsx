@@ -21,7 +21,7 @@ export function ThemedTwoColumnList({
     style,
     ...rest
 }: ThemedTwoColumnListProps) {
-    const { theme, color } = useAppTheme();
+    const { color } = useAppTheme();
 
     // Split data into two columns
     const leftColumn = data.filter((_, i) => i % 2 === 0);
@@ -29,13 +29,13 @@ export function ThemedTwoColumnList({
 
     const renderItem = (item: ListItem, index: number) => (
         <View key={index} style={styles.itemRow}>
-            <ThemedText variant="body" color="text.heading" style={styles.label}>
+            <ThemedText color="text.heading" style={styles.label} variant="body">
                 {item.label}
             </ThemedText>
             <ThemedText
-                variant="label"
                 color={item.highlight ? "palette.secondary" : "text.lively"}
                 style={styles.value}
+                variant="label"
             >
                 {item.value}
             </ThemedText>
@@ -46,10 +46,10 @@ export function ThemedTwoColumnList({
         <View style={[styles.container, style]} {...rest}>
             {(Icon || title) && (
                 <View style={styles.header}>
-                    {Icon && <Icon size={22} color={color("palette.tertiary")} />}
+                    {Icon && <Icon color={color("palette.tertiary")} size={22} />}
 
                     {title && (
-                        <ThemedText variant="label" color="text.heading"  style={styles.titleText}>
+                        <ThemedText color="text.heading" style={styles.titleText} variant="label">
                             {title}
                         </ThemedText>
                     )}

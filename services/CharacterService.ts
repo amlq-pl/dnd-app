@@ -18,7 +18,7 @@ const MOCK_ABILITIES: AbilityScores = {
     CHA: { score: 20, mod: calculateModifier(20) },
 };
 
-export const ABILITY_LABELS: Array<{ key: AbilityKey; label: string }> = [
+export const ABILITY_LABELS: { key: AbilityKey; label: string }[] = [
     { key: "STR", label: "Strength" },
     { key: "DEX", label: "Dexterity" },
     { key: "CON", label: "Constitution" },
@@ -38,7 +38,7 @@ const MOCK_CHARACTER_BIOMETRICS: CharacterBiometrics = {
     skin: "Bronze-Gold",
 };
 
-export const BIOMETRIC_LABELS: Array<{ key: keyof CharacterBiometrics; label: string }> = [
+export const BIOMETRIC_LABELS: { key: keyof CharacterBiometrics; label: string }[] = [
     { key: "alignment", label: "Alignment" },
     { key: "gender", label: "Gender" },
     { key: "eyes", label: "Eye Color" },

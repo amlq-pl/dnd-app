@@ -1,10 +1,9 @@
-import { View, type ViewProps, StyleSheet, Pressable, Platform } from "react-native";
+import { View, type ViewProps, StyleSheet, Pressable } from "react-native";
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { ThemedText } from "./ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 
-import {ListEntry} from '@/types/lists'
-import COLORS from "@/constants/colors";
+import { ListEntry } from "@/types/lists";
 
 export interface ThemedListProps extends ViewProps {
     title?: string;
@@ -23,15 +22,17 @@ export function ThemedList({
     style,
     ...rest
 }: ThemedListProps) {
-    const { theme, color } = useAppTheme();
+    const { color } = useAppTheme();
 
     return (
         <View style={[styles.container, style]} {...rest}>
             {/* Header */}
             {title && (
                 <View style={styles.header}>
-                    {icon && <Ionicons name={icon as any} size={20} color={color("palette.tertiary")} />}
-                    <ThemedText variant="label" style={styles.titleText} color="text.heading">
+                    {icon && (
+                        <Ionicons color={color("palette.tertiary")} name={icon as any} size={20} />
+                    )}
+                    <ThemedText color="text.heading" style={styles.titleText} variant="label">
                         {title}
                     </ThemedText>
                 </View>
@@ -45,15 +46,22 @@ export function ThemedList({
                             <View
                                 style={[
                                     styles.bullet,
-                                    { backgroundColor: item.state === "active" ? "#FDE047" : "#374151" },
-                                    item.state === "active" && styles.bulletGlow
+                                    {
+                                        backgroundColor:
+                                            item.state === "active" ? "#FDE047" : "#374151",
+                                    },
+                                    item.state === "active" && styles.bulletGlow,
                                 ]}
                             />
-                            <ThemedText variant="body" color="text.heading" style={styles.skillLabel}>
+                            <ThemedText
+                                color="text.heading"
+                                style={styles.skillLabel}
+                                variant="body"
+                            >
                                 {item.label}
                             </ThemedText>
                         </View>
-                        <ThemedText variant="label" color="text.lively" style={styles.skillValue}>
+                        <ThemedText color="text.lively" style={styles.skillValue} variant="label">
                             {item.value}
                         </ThemedText>
                     </View>
@@ -62,8 +70,8 @@ export function ThemedList({
 
             {/* Footer Action */}
             {footerLabel && (
-                <Pressable onPress={onFooterPress} style={styles.footer}>
-                    <ThemedText variant="body" color="text.lively" style={styles.footerText}>
+                <Pressable style={styles.footer} onPress={onFooterPress}>
+                    <ThemedText color="text.lively" style={styles.footerText} variant="body">
                         {footerLabel.toUpperCase()}
                     </ThemedText>
                 </Pressable>

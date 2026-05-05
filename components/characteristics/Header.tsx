@@ -1,58 +1,61 @@
-import {
-    ThemedHeadline,
-    ThemedStatContainer,
-    ThemedText,
-    ThemedView,
-} from "@/components/themed";
-import { Image, StyleSheet, View, ActivityIndicator } from "react-native";
+import { ThemedHeadline, ThemedStatContainer, ThemedText, ThemedView } from "@/components/themed";
+import { StyleSheet, View, ActivityIndicator } from "react-native";
 
 import { useCharacter } from "@/hooks/character";
 import { useAppTheme } from "@/hooks/useAppTheme";
 
-
 export const Header = ({ characterId }: { characterId: string }) => {
-    const { character, isLoading } = useCharacter(characterId)
+    const { character, isLoading } = useCharacter(characterId);
     const { theme } = useAppTheme();
 
-    if (isLoading || !character) return <ActivityIndicator />
+    if (isLoading || !character) return <ActivityIndicator />;
 
+    return (
+        <ThemedView>
+            {/** IDENTITY PROFILE TAG */}
+            <ThemedView style={styles.labelContainer}>
+                <ThemedText color="text.muted" style={styles.labelText}>
+                    IDENTITY PROFILE
+                </ThemedText>
+            </ThemedView>
 
-    return <ThemedView>
-        {/** IDENTITY PROFILE TAG */}
-        <ThemedView style={styles.labelContainer}>
-            <ThemedText style={styles.labelText} color="text.muted">
-                IDENTITY PROFILE
-            </ThemedText>
+            {/** CHARACTER NAME */}
+            <ThemedView style={styles.heading}>
+                <ThemedHeadline
+                    color="text.heading"
+                    style={[
+                        styles.headingTitle,
+                        {
+                            fontFamily: theme.typography.headlineFont,
+                            fontWeight: "bold",
+                        },
+                    ]}
+                >
+                    {character?.name}
+                </ThemedHeadline>
+            </ThemedView>
+
+            {/** TODO:  fix these colors */}
+            <View style={styles.headerPills}>
+                <ThemedStatContainer
+                    backgroundColor="buttonPrimary.background"
+                    label="Level"
+                    labelColor="buttonPrimary.text"
+                    mode="pill"
+                    value={`${character?.level} ${character?.class}`}
+                />
+                <ThemedStatContainer
+                    backgroundColor="buttonSecondary.background"
+                    label="Inspiration:"
+                    labelColor="buttonSecondary.text"
+                    mode="pill"
+                    value={character?.inspiration}
+                />
+            </View>
+            {/** TODO: consider adding a level here */}
         </ThemedView>
-
-        {/** CHARACTER NAME */}
-        <ThemedView style={styles.heading}>
-            <ThemedHeadline
-                color="text.heading"
-                style={[
-                    styles.headingTitle,
-                    {
-                        fontFamily: theme.typography.headlineFont,
-                        fontWeight: "bold",
-                    },
-                ]}
-            >
-                {character?.name}
-            </ThemedHeadline>
-        </ThemedView>
-
-        {/** TODO:  fix these colors */}
-        <View style={styles.headerPills}>
-            <ThemedStatContainer label="Level" value={`${character?.level} ${character?.class}`} mode="pill" backgroundColor="buttonPrimary.background" labelColor="buttonPrimary.text" />
-            <ThemedStatContainer label="Inspiration:" value={character?.inspiration} mode="pill" backgroundColor="buttonSecondary.background" labelColor="buttonSecondary.text" />
-        </View>
-        {/** TODO: consider adding a level here */}
-
-    </ThemedView>
-
-}
-
-
+    );
+};
 
 const styles = StyleSheet.create({
     screen: { flex: 1, marginBottom: 20, marginTop: 35 },
@@ -75,7 +78,7 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         alignSelf: "stretch",
     },
-    headerPills: { flexDirection: 'row', gap: 8, alignSelf: 'flex-start' },
+    headerPills: { flexDirection: "row", gap: 8, alignSelf: "flex-start" },
     headingTitle: {
         fontSize: 48,
         lineHeight: 60,
@@ -112,14 +115,14 @@ const styles = StyleSheet.create({
         textAlign: "left",
     },
     labelContainer: {
-        alignSelf: 'flex-start',
+        alignSelf: "flex-start",
         paddingHorizontal: 6,
         paddingVertical: 2,
         marginBottom: 8,
     },
     labelText: {
         fontSize: 12,
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
+        fontWeight: "bold",
+        textTransform: "uppercase",
     },
 });

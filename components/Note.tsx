@@ -1,9 +1,9 @@
-import React from 'react';
-import { StyleSheet, View, ViewStyle, TextStyle } from 'react-native';
-import { ThemedText } from './themed';
+import React from "react";
+import { StyleSheet, View, ViewStyle, TextStyle } from "react-native";
+import { ThemedText } from "./themed";
 // Assuming you have a useTheme hook or ThemedView to resolve background palette keys
-import { useAppTheme } from '@/hooks/useAppTheme';
-import { ThemeColorKey } from '@/constants/themes';
+import { useAppTheme } from "@/hooks/useAppTheme";
+import { ThemeColorKey } from "@/constants/themes";
 
 interface NoteProps {
     title?: string;
@@ -14,7 +14,7 @@ interface NoteProps {
     accent?: boolean;
     backgroundColor?: ThemeColorKey;
     textColor?: ThemeColorKey;
-    headerVariant?: 'headline' | 'body' | 'label';
+    headerVariant?: "headline" | "body" | "label";
     blurIntensity?: number;
     containerStyle?: ViewStyle;
     contentStyle?: TextStyle;
@@ -22,7 +22,7 @@ interface NoteProps {
 
 export const Note: React.FC<NoteProps> = ({
     title,
-    titleColor="palette.primary",
+    titleColor = "palette.primary",
     children,
     accentColor = "palette.primary",
     accent = false,
@@ -32,36 +32,30 @@ export const Note: React.FC<NoteProps> = ({
     containerStyle,
     contentStyle,
 }) => {
-    const {theme, color} = useAppTheme();
+    const { color } = useAppTheme();
 
     // Resolve the theme keys to actual colors for the styles that don't support keys natively
-    const resolvedBg = color(backgroundColor)
-    const resolvedAccent = color(accentColor)
+    const resolvedBg = color(backgroundColor);
+    const resolvedAccent = color(accentColor);
 
     return (
-        <View
-            style={[styles.container, { backgroundColor: resolvedBg }, containerStyle]}
-        >
+        <View style={[styles.container, { backgroundColor: resolvedBg }, containerStyle]}>
             {/* The Accent Bar - using resolved theme color */}
             <View style={accent && [styles.accentBar, { backgroundColor: resolvedAccent }]} />
 
             <View style={styles.innerWrapper}>
                 {title && (
-                    <ThemedText
-                        variant={headerVariant}
-                        color={titleColor}
-                        style={styles.header}
-                    >
+                    <ThemedText color={titleColor} style={styles.header} variant={headerVariant}>
                         {title}
                     </ThemedText>
                 )}
 
                 <View style={styles.contentContainer}>
-                    {typeof children === 'string' ? (
+                    {typeof children === "string" ? (
                         <ThemedText
-                            variant="body"
                             color={textColor}
                             style={[styles.defaultText, contentStyle]}
+                            variant="body"
                         >
                             {children}
                         </ThemedText>
@@ -78,15 +72,15 @@ const styles = StyleSheet.create({
     container: {
         padding: 32,
         borderRadius: 24,
-        overflow: 'hidden',
-        alignSelf: 'stretch',
-        flexDirection: 'row',
+        overflow: "hidden",
+        alignSelf: "stretch",
+        flexDirection: "row",
     },
     accentBar: {
         width: 4,
         height: 24,
         borderRadius: 2,
-        position: 'absolute',
+        position: "absolute",
         left: 12,
         top: 36,
     },
@@ -95,16 +89,16 @@ const styles = StyleSheet.create({
         gap: 16,
     },
     header: {
-        textTransform: 'none',
-        fontWeight: '400'
+        textTransform: "none",
+        fontWeight: "400",
     },
     contentContainer: {
-        alignSelf: 'stretch',
+        alignSelf: "stretch",
     },
     defaultText: {
-        fontFamily: 'Manrope',
+        fontFamily: "Manrope",
         fontSize: 16,
-        fontWeight: '300',
+        fontWeight: "300",
         lineHeight: 26,
     },
 });

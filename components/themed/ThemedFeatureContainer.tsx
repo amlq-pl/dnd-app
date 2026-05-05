@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { useAppTheme } from "@/hooks/useAppTheme";
-import { ThemedHeadline } from "./ThemedHeadline";
 import { ThemedText } from "./ThemedText";
 import { ThemedTextBox } from "./ThemedTextBox";
 import { ThemedView } from "./ThemedView";
@@ -23,25 +22,25 @@ export function ThemedFeatureContainer({ feature }: ThemedFeatureContainerProps)
 
     return (
         <Pressable
-            onPress={() => setExpanded((value) => !value)}
-            style={({ pressed }) => [styles.pressable, pressed && styles.pressed]}
             android_ripple={{ color: color("border.strong") }}
+            style={({ pressed }) => [styles.pressable, pressed && styles.pressed]}
+            onPress={() => setExpanded((value) => !value)}
         >
             <ThemedTextBox
+                backgroundColor="surface.surface"
+                borderRadius="lg"
                 style={[
                     styles.container,
                     expanded && styles.containerExpanded,
                     { borderColor: color("border.strong") },
                 ]}
-                backgroundColor="surface.surface"
-                borderRadius="lg"
             >
                 <ThemedView style={styles.header}>
                     <ThemedView style={styles.titleRow}>
-                        <ThemedText color="palette.primary" variant="label" style={styles.name}>
+                        <ThemedText color="palette.primary" style={styles.name} variant="label">
                             {feature.name}
                         </ThemedText>
-                        <ThemedText color="text.muted" variant="body" style={styles.tag}>
+                        <ThemedText color="text.muted" style={styles.tag} variant="body">
                             {feature.tag}
                         </ThemedText>
                     </ThemedView>
@@ -96,7 +95,7 @@ const styles = StyleSheet.create({
         marginBottom: 0,
         marginTop: -8,
         fontSize: 8,
-        textAlign: "right"
+        textAlign: "right",
     },
     shortDescription: {
         marginBottom: 10,
