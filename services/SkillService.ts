@@ -1,4 +1,4 @@
-import { AbilityKey, CharacterInfo } from "@/types/character";
+import { CharacterInfo } from "@/types/character";
 import { SkillKey, SkillDefinition, SkillEntry } from "@/types/skills";
 import {BulletState} from '@/types/lists'
 

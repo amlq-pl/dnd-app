@@ -13,7 +13,7 @@ export const useClassFeatures = (classId: string, level: number | undefined) => 
                 setFeatures(data);
                 setIsLoading(false);
             });
-    }, [classId]);
+    }, [classId, level]);
 
     return { features, isLoading };
 };

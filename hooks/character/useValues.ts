@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { CharacterService } from '@/services/CharacterService';
-import { CharacterValues } from '@/types/character';
 import { BoxListItem } from '@/components/themed';
 
 export const useCharacterBackground = (characterId: string) => {

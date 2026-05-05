@@ -64,9 +64,9 @@ export interface CharacterBiometrics {
 
 export interface CharacterValues {
     background: string,
-    personalityTraits: Array<string>,
-    ideals: Array<string>,
-    bonds: Array<string>,
-    flaws: Array<string>
+    personalityTraits: string[],
+    ideals: string[],
+    bonds: string[],
+    flaws: string[]
 
 }
