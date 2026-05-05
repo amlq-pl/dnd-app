@@ -1,15 +1,19 @@
-import {
-    ThemedView, ThemedBoxList
-} from "@/components/themed";
+import { ThemedView, ThemedBoxList } from "@/components/themed";
 import { ScrollView, StyleSheet } from "react-native";
-import { useBonds, useCharacter, useCharacterBackground, useFlaws, useIdeals, usePersonalityTraits } from "@/hooks/character";
+import {
+    useBonds,
+    useCharacter,
+    useCharacterBackground,
+    useFlaws,
+    useIdeals,
+    usePersonalityTraits,
+} from "@/hooks/character";
 import { Header } from "@/components/characteristics/Header";
 import { BiometricsGrid } from "@/components/characteristics/BiometricsGrid";
-import { Note } from "@/components/Note"
+import { Note } from "@/components/Note";
 
 export default function CharacteristicsScreen() {
-
-    const characterId = "val-001"
+    const characterId = "val-001";
     const { character, isLoading: charLoading } = useCharacter(characterId);
     const { data: background, isLoading: valLoading } = useCharacterBackground(characterId);
 
@@ -18,11 +22,11 @@ export default function CharacteristicsScreen() {
     const { data: ideals, isLoading: idealsLoading } = useIdeals(characterId);
     const { data: bonds, isLoading: bondsLoading } = useBonds(characterId);
 
-    const isLoading = charLoading || valLoading || flawsLoading || idealsLoading || bondsLoading || traitsLoading;
+    const isLoading =
+        charLoading || valLoading || flawsLoading || idealsLoading || bondsLoading || traitsLoading;
 
     if (isLoading || !character || !background || !flaws || !ideals || !bonds || !traits) {
         // TODO: handle it
-
     }
 
     return (
@@ -31,52 +35,50 @@ export default function CharacteristicsScreen() {
                 contentContainerStyle={styles.scrollContentContainer}
                 style={styles.scrollView}
             >
-
                 <ThemedView style={styles.content}>
-                    { /** HEADER  */}
+                    {/** HEADER  */}
                     <Header characterId={characterId} />
 
-                    { /** GRID */}
+                    {/** GRID */}
                     <BiometricsGrid characterId={characterId} />
 
-                    { /** BACKGROUND */}
+                    {/** BACKGROUND */}
                     <Note
-                        title="The Noble Background"
-                        titleColor="text.lively"
                         backgroundColor="surface.note"
                         textColor="text.note"
+                        title="The Noble Background"
+                        titleColor="text.lively"
                     >
                         {background}
                     </Note>
 
                     <ThemedBoxList
-                        title="Personality Traits"
                         data={traits}
-                        itemStyle={styles.features}
                         glowColor="palette.secondary"
+                        itemStyle={styles.features}
+                        title="Personality Traits"
                     />
 
                     <ThemedBoxList
-                        title="Bonds"
                         data={bonds}
-                        itemStyle={styles.features}
                         glowColor="palette.tertiary"
+                        itemStyle={styles.features}
+                        title="Bonds"
                     />
 
                     <ThemedBoxList
-                        title="Ideals"
                         data={ideals}
-                        itemStyle={styles.features}
                         glowColor="palette.tertiary"
+                        itemStyle={styles.features}
+                        title="Ideals"
                     />
 
                     <ThemedBoxList
-                        title="Flaws"
                         data={flaws}
-                        itemStyle={styles.features}
                         glowColor="semantic.error"
+                        itemStyle={styles.features}
+                        title="Flaws"
                     />
-
                 </ThemedView>
             </ScrollView>
         </ThemedView>
@@ -107,5 +109,5 @@ const styles = StyleSheet.create({
         shadowRadius: 15,
 
         elevation: 4,
-    }
+    },
 });

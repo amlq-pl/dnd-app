@@ -1,17 +1,13 @@
 import React from "react";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
-import {
-    ThemedGrid,
-    ThemedText,
-    ThemedView
-} from "@/components/themed";
+import { ThemedGrid, ThemedText, ThemedView } from "@/components/themed";
 import { BoxWithGlow } from ".././BoxWithGlow";
 import { useBiometrics } from "@/hooks/character";
 import { useAppTheme } from "@/hooks/useAppTheme";
 
 export const BiometricsGrid = ({ characterId }: { characterId: string }) => {
     const { data: entries, isLoading } = useBiometrics(characterId);
-    const {theme, color} = useAppTheme();
+    const { theme, color } = useAppTheme();
 
     if (isLoading || !entries) {
         return (
@@ -23,29 +19,19 @@ export const BiometricsGrid = ({ characterId }: { characterId: string }) => {
 
     return (
         <ThemedGrid
-            data={entries}
-            columns={2}
-            rowGap={12}
             columnGap={12}
+            columns={2}
+            data={entries}
             renderItem={(item) => (
-                <BoxWithGlow
-                    glow={false}
-                >
+                <BoxWithGlow glow={false}>
                     <View style={styles.textContainer}>
-                        <ThemedText
-                            variant="body"
-                            color="card.header"
-                            style={styles.label}
-                        >
+                        <ThemedText color="card.header" style={styles.label} variant="body">
                             {item.label.toUpperCase()}
                         </ThemedText>
                         <ThemedText
-                            variant="headline"
                             color="card.label"
-                            style={[
-                                styles.value,
-                                { fontFamily: theme.typography.headlineFont }
-                            ]}
+                            style={[styles.value, { fontFamily: theme.typography.headlineFont }]}
+                            variant="headline"
                         >
                             {item.value}
                         </ThemedText>
@@ -56,6 +42,7 @@ export const BiometricsGrid = ({ characterId }: { characterId: string }) => {
                     <View style={styles.decorationSpacer} />
                 </BoxWithGlow>
             )}
+            rowGap={12}
         />
     );
 };
