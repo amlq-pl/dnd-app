@@ -15,7 +15,15 @@
 --      lets the planner cache the value once per query.
 --      Docs: https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select
 --
--- Convention: never edit a previously-applied migration; this is a follow-up.
+--   4. AUTHORIZATION (signup under RLS):
+--      `components/auth/SocialAuth.tsx` writes to `public.users` with upsert.
+--      First-time sign-in takes the INSERT path, so we need an INSERT policy.
+--
+-- NOTE:
+-- This file now represents the canonical "hardened users policies" state and is
+-- intended to be reusable when migrating this schema to a fresh DB instance.
+-- Existing environments that already applied this migration should receive an
+-- additional follow-up migration if policy definitions diverge.
 
 ALTER FUNCTION public.update_updated_at() SET search_path = '';
 
@@ -24,3 +32,10 @@ ALTER POLICY users_select_own ON public.users
 
 ALTER POLICY users_update_own ON public.users
   USING (id = (SELECT auth.uid()));
+
+ALTER POLICY users_update_own ON public.users
+  WITH CHECK (id = (SELECT auth.uid()));
+
+CREATE POLICY users_insert_own ON public.users
+  FOR INSERT TO authenticated
+  WITH CHECK (id = (SELECT auth.uid()));
