@@ -1,6 +1,7 @@
 import { ThemedHeadline, ThemedView } from "@/components/themed";
 import { ThemedFeatureContainer, type Feature } from "@/components/themed/ThemedFeatureContainer";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, View } from "react-native";
+import { useStyles } from "@/hooks/useStyles";
 const FEATURES: Feature[] = [
     {
         name: "Divine Smite",
@@ -45,6 +46,17 @@ const FEATURES: Feature[] = [
 ];
 
 export default function FeaturesAndTraitsScreen() {
+    const { styles } = useStyles((theme) => ({
+        container: { flex: 1, padding: theme.spacing.lg },
+        scrollContent: { paddingBottom: theme.spacing.xxl },
+        headline: {
+            marginBottom: theme.spacing.lg,
+            marginTop: theme.spacing.xxl,
+            textAlign: "center",
+        },
+        list: { width: "100%" },
+    }));
+
     return (
         <ThemedView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -60,21 +72,3 @@ export default function FeaturesAndTraitsScreen() {
         </ThemedView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-    },
-    scrollContent: {
-        paddingBottom: 32,
-    },
-    headline: {
-        marginBottom: 16,
-        marginTop: 32,
-        textAlign: "center",
-    },
-    list: {
-        width: "100%",
-    },
-});

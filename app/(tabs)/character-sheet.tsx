@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView } from "react-native";
 import { useState } from "react";
 
 import { ThemedView, ThemedList, ThemedBoxList } from "@/components/themed";
@@ -10,8 +10,26 @@ import { SavingThrowsIcon } from "@/components/icons";
 import { useCharacter, useSavingThrows } from "@/hooks/character";
 import { useSkills } from "@/hooks/useAbilities";
 import { useClassFeatures } from "@/hooks/useClassFeatures";
+import { useStyles } from "@/hooks/useStyles";
 
 export default function MainSheetScreen() {
+    const { styles } = useStyles((theme, c) => ({
+        screen: { flex: 1, marginBottom: 20, marginTop: 35 },
+        scrollView: { flex: 1 },
+        scrollContentContainer: { padding: theme.spacing.lg, gap: theme.spacing.xl },
+        features: {
+            backgroundColor: c("card.background"),
+            borderRadius: theme.borderRadius.md,
+            borderLeftWidth: 2,
+            borderLeftColor: c("card.glow"),
+            shadowColor: c("card.glow"),
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0.1,
+            shadowRadius: 15,
+            elevation: 4,
+        },
+    }));
+
     const characterId = "val-001";
 
     const [isExpanded, setIsExpanded] = useState(false);
@@ -67,23 +85,3 @@ export default function MainSheetScreen() {
         </ThemedView>
     );
 }
-
-const styles = StyleSheet.create({
-    screen: { flex: 1, marginBottom: 20, marginTop: 35 },
-    scrollView: { flex: 1 },
-    scrollContentContainer: { padding: 16, gap: 20 },
-    features: {
-        backgroundColor: "#1C1B1B",
-        borderRadius: 12,
-
-        borderLeftWidth: 2,
-        borderLeftColor: "#D0BCFF",
-
-        shadowColor: "#D0BCFF",
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.1,
-        shadowRadius: 15,
-
-        elevation: 4,
-    },
-});

@@ -1,8 +1,7 @@
 import React from "react";
-import { StyleSheet, View, ViewStyle, TextStyle } from "react-native";
+import { View, ViewStyle, TextStyle } from "react-native";
 import { ThemedText } from "./themed";
-// Assuming you have a useTheme hook or ThemedView to resolve background palette keys
-import { useAppTheme } from "@/hooks/useAppTheme";
+import { useStyles } from "@/hooks/useStyles";
 import { ThemeColorKey } from "@/constants/themes";
 
 interface NoteProps {
@@ -32,16 +31,34 @@ export const Note: React.FC<NoteProps> = ({
     containerStyle,
     contentStyle,
 }) => {
-    const { color } = useAppTheme();
-
-    // Resolve the theme keys to actual colors for the styles that don't support keys natively
-    const resolvedBg = color(backgroundColor);
-    const resolvedAccent = color(accentColor);
+    const { styles, color } = useStyles((_, c) => ({
+        container: {
+            padding: 32,
+            borderRadius: 24,
+            overflow: "hidden",
+            alignSelf: "stretch",
+            flexDirection: "row",
+        },
+        accentBar: {
+            width: 4,
+            height: 24,
+            borderRadius: 2,
+            position: "absolute",
+            left: 12,
+            top: 36,
+        },
+        innerWrapper: { flex: 1, gap: 16 },
+        header: { textTransform: "none", fontWeight: "400" },
+        contentContainer: { alignSelf: "stretch" },
+        defaultText: { fontFamily: "Manrope", fontSize: 16, fontWeight: "300", lineHeight: 26 },
+    }));
 
     return (
-        <View style={[styles.container, { backgroundColor: resolvedBg }, containerStyle]}>
+        <View
+            style={[styles.container, { backgroundColor: color(backgroundColor) }, containerStyle]}
+        >
             {/* The Accent Bar - using resolved theme color */}
-            <View style={accent && [styles.accentBar, { backgroundColor: resolvedAccent }]} />
+            <View style={accent && [styles.accentBar, { backgroundColor: color(accentColor) }]} />
 
             <View style={styles.innerWrapper}>
                 {title && (
@@ -67,38 +84,3 @@ export const Note: React.FC<NoteProps> = ({
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        padding: 32,
-        borderRadius: 24,
-        overflow: "hidden",
-        alignSelf: "stretch",
-        flexDirection: "row",
-    },
-    accentBar: {
-        width: 4,
-        height: 24,
-        borderRadius: 2,
-        position: "absolute",
-        left: 12,
-        top: 36,
-    },
-    innerWrapper: {
-        flex: 1,
-        gap: 16,
-    },
-    header: {
-        textTransform: "none",
-        fontWeight: "400",
-    },
-    contentContainer: {
-        alignSelf: "stretch",
-    },
-    defaultText: {
-        fontFamily: "Manrope",
-        fontSize: 16,
-        fontWeight: "300",
-        lineHeight: 26,
-    },
-});

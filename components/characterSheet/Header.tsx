@@ -1,10 +1,23 @@
 import { ThemedHeadline, ThemedStatContainer, ThemedText } from "@/components/themed";
-import { Image, StyleSheet, View, ActivityIndicator } from "react-native";
-
+import { Image, View, ActivityIndicator } from "react-native";
 import { InspirationIcon, ACIcon, HPIcon } from "@/components/icons";
 import { useCharacter } from "@/hooks/character";
+import { useStyles } from "@/hooks/useStyles";
 
 export const Header = ({ characterId }: { characterId: string }) => {
+    const { styles } = useStyles((theme) => ({
+        headerContainer: { alignItems: "center", gap: theme.spacing.sm },
+        avatar: {
+            width: 100,
+            height: 100,
+            borderRadius: theme.borderRadius.md,
+            alignSelf: "flex-end",
+        },
+        headerPills: { flexDirection: "row", gap: theme.spacing.sm, alignSelf: "flex-start" },
+        heroName: { fontSize: 36, textAlign: "left", alignSelf: "flex-start" },
+        vitalsRow: { flexDirection: "row", gap: theme.spacing.xl, alignSelf: "flex-start" },
+    }));
+
     const { character, isLoading } = useCharacter(characterId);
 
     if (isLoading || !character) return <ActivityIndicator />;
@@ -52,11 +65,3 @@ export const Header = ({ characterId }: { characterId: string }) => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    headerContainer: { alignItems: "center", gap: 8 },
-    avatar: { width: 100, height: 100, borderRadius: 12, alignSelf: "flex-end" },
-    headerPills: { flexDirection: "row", gap: 8, alignSelf: "flex-start" },
-    heroName: { fontSize: 36, textAlign: "left", alignSelf: "flex-start" },
-    vitalsRow: { flexDirection: "row", gap: 16, alignSelf: "flex-start" },
-});

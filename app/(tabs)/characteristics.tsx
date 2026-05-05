@@ -1,5 +1,5 @@
 import { ThemedView, ThemedBoxList } from "@/components/themed";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView } from "react-native";
 import {
     useBonds,
     useCharacter,
@@ -11,12 +11,32 @@ import {
 import { Header } from "@/components/characteristics/Header";
 import { BiometricsGrid } from "@/components/characteristics/BiometricsGrid";
 import { Note } from "@/components/Note";
+import { useStyles } from "@/hooks/useStyles";
 
 export default function CharacteristicsScreen() {
+    const { styles } = useStyles((theme, c) => ({
+        screen: { flex: 1, marginBottom: theme.spacing.xl, marginTop: 35 },
+        scrollView: { flex: 1, alignSelf: "stretch" },
+        scrollContentContainer: { flexGrow: 1 },
+        content: {
+            alignSelf: "stretch",
+            paddingHorizontal: theme.spacing.lg,
+            paddingTop: theme.spacing.xl,
+            gap: theme.spacing.lg,
+        },
+        features: {
+            borderRadius: theme.borderRadius.md,
+            borderLeftWidth: 2,
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0.1,
+            shadowRadius: 15,
+            elevation: 4,
+        },
+    }));
+
     const characterId = "val-001";
     const { character, isLoading: charLoading } = useCharacter(characterId);
     const { data: background, isLoading: valLoading } = useCharacterBackground(characterId);
-
     const { data: traits, isLoading: traitsLoading } = usePersonalityTraits(characterId);
     const { data: flaws, isLoading: flawsLoading } = useFlaws(characterId);
     const { data: ideals, isLoading: idealsLoading } = useIdeals(characterId);
@@ -84,30 +104,3 @@ export default function CharacteristicsScreen() {
         </ThemedView>
     );
 }
-
-const styles = StyleSheet.create({
-    screen: { flex: 1, marginBottom: 20, marginTop: 35 },
-    scrollView: {
-        flex: 1,
-        alignSelf: "stretch",
-    },
-    scrollContentContainer: {
-        flexGrow: 1,
-    },
-    content: {
-        alignSelf: "stretch",
-        paddingHorizontal: 16,
-        paddingTop: 24,
-        gap: 16,
-    },
-    features: {
-        borderRadius: 12,
-
-        borderLeftWidth: 2,
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.1,
-        shadowRadius: 15,
-
-        elevation: 4,
-    },
-});

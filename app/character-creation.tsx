@@ -1,8 +1,18 @@
 import { ThemedText, ThemedView } from "@/components/themed";
-import { StyleSheet } from "react-native";
+import { useStyles } from "@/hooks/useStyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CharacterCreationScreen() {
+    const { styles } = useStyles((theme) => ({
+        screen: { flex: 1 },
+        safeArea: {
+            flex: 1,
+            justifyContent: "flex-start",
+            alignItems: "center",
+            gap: theme.spacing.xl,
+        },
+    }));
+
     return (
         <ThemedView backgroundColor="surface.background" style={styles.screen}>
             <SafeAreaView edges={["top", "bottom"]} style={styles.safeArea}>
@@ -13,20 +23,3 @@ export default function CharacterCreationScreen() {
         </ThemedView>
     );
 }
-
-const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-    },
-    safeArea: {
-        flex: 1,
-        justifyContent: "flex-start",
-        alignItems: "center",
-        gap: 24,
-    },
-    button: {
-        paddingHorizontal: 32,
-        paddingVertical: 14,
-        borderRadius: 12,
-    },
-});

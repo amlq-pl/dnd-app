@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Pressable, StyleSheet } from "react-native";
-import { useAppTheme } from "@/hooks/useAppTheme";
+import { Pressable } from "react-native";
+import { useStyles } from "@/hooks/useStyles";
 import { ThemedText } from "./ThemedText";
 import { ThemedTextBox } from "./ThemedTextBox";
 import { ThemedView } from "./ThemedView";
@@ -17,7 +17,29 @@ export interface ThemedFeatureContainerProps {
 }
 
 export function ThemedFeatureContainer({ feature }: ThemedFeatureContainerProps) {
-    const { color } = useAppTheme();
+    const { styles, color } = useStyles((_, c) => ({
+        pressable: { marginVertical: 8 },
+        pressed: { opacity: 0.75 },
+        container: {
+            padding: 16,
+            borderWidth: 1,
+            borderColor: c("border.strong"),
+            justifyContent: "flex-start",
+            alignItems: "stretch",
+        },
+        containerExpanded: { paddingBottom: 20 },
+        header: { marginBottom: 10 },
+        titleRow: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+        },
+        name: { marginBottom: 0, flex: 1, fontSize: 20 },
+        tag: { marginBottom: 0, marginTop: -8, fontSize: 8, textAlign: "right" },
+        shortDescription: { marginBottom: 10 },
+        description: { marginBottom: 10 },
+    }));
+
     const [expanded, setExpanded] = useState(false);
 
     return (
@@ -29,11 +51,7 @@ export function ThemedFeatureContainer({ feature }: ThemedFeatureContainerProps)
             <ThemedTextBox
                 backgroundColor="surface.surface"
                 borderRadius="lg"
-                style={[
-                    styles.container,
-                    expanded && styles.containerExpanded,
-                    { borderColor: color("border.strong") },
-                ]}
+                style={[styles.container, expanded && styles.containerExpanded]}
             >
                 <ThemedView style={styles.header}>
                     <ThemedView style={styles.titleRow}>
@@ -61,46 +79,3 @@ export function ThemedFeatureContainer({ feature }: ThemedFeatureContainerProps)
         </Pressable>
     );
 }
-
-const styles = StyleSheet.create({
-    pressable: {
-        marginVertical: 8,
-    },
-    pressed: {
-        opacity: 0.75,
-    },
-    container: {
-        padding: 16,
-        borderWidth: 1,
-        justifyContent: "flex-start",
-        alignItems: "stretch",
-    },
-    containerExpanded: {
-        paddingBottom: 20,
-    },
-    header: {
-        marginBottom: 10,
-    },
-    titleRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-    },
-    name: {
-        marginBottom: 0,
-        flex: 1,
-        fontSize: 20,
-    },
-    tag: {
-        marginBottom: 0,
-        marginTop: -8,
-        fontSize: 8,
-        textAlign: "right",
-    },
-    shortDescription: {
-        marginBottom: 10,
-    },
-    description: {
-        marginBottom: 10,
-    },
-});

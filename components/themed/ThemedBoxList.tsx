@@ -1,5 +1,6 @@
 import React from "react";
-import { View, StyleSheet, type ViewProps, type ViewStyle } from "react-native";
+import { View, type ViewProps, type ViewStyle } from "react-native";
+import { useStyles } from "@/hooks/useStyles";
 import { ThemedText } from "./ThemedText";
 import { BoxWithGlow } from "../BoxWithGlow";
 import { ThemeColorKey } from "@/constants/themes";
@@ -26,6 +27,16 @@ export function ThemedBoxList({
     glowColor = "card.glow",
     ...rest
 }: ThemedBoxListProps) {
+    const { styles } = useStyles((theme) => ({
+        container: { width: "100%", marginVertical: theme.spacing.md },
+        listTitle: { fontSize: 26, marginBottom: theme.spacing.lg },
+        stack: { gap: theme.spacing.md },
+        itemBox: { width: "100%" },
+        textContainer: { flex: 1, justifyContent: "center" },
+        itemTitle: { fontSize: 18, marginBottom: theme.spacing.xs },
+        itemDescription: { lineHeight: 20 },
+    }));
+
     return (
         <View style={[styles.container, style]} {...rest}>
             <ThemedText color="text.heading" style={styles.listTitle} variant="label">
@@ -65,31 +76,3 @@ export function ThemedBoxList({
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        width: "100%",
-        marginVertical: 12,
-    },
-    listTitle: {
-        fontSize: 26,
-        marginBottom: 16,
-    },
-    stack: {
-        gap: 12,
-    },
-    itemBox: {
-        width: "100%",
-    },
-    textContainer: {
-        flex: 1,
-        justifyContent: "center",
-    },
-    itemTitle: {
-        fontSize: 18,
-        marginBottom: 4,
-    },
-    itemDescription: {
-        lineHeight: 20,
-    },
-});
