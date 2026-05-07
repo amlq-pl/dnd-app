@@ -50,6 +50,12 @@ export interface ThemeButtonColors {
     border: string;
 }
 
+export interface ThemeGlowColors {
+    softGlow: string;
+    goldGlow: string;
+    redGlow: string;
+}
+
 export interface ThemeCardColors {
     background: string,
     header: string,
@@ -74,6 +80,7 @@ export interface ThemeColors {
     border: ThemeBorderColors;
     semantic: ThemeSemanticColors;
     card: ThemeCardColors;
+    glow: ThemeGlowColors;
     buttonPrimary: ThemeButtonColors;
     buttonSecondary: ThemeButtonColors;
 }
@@ -88,6 +95,7 @@ export type ThemeColorKey =
     | `border.${keyof ThemeBorderColors}`
     | `semantic.${keyof ThemeSemanticColors}`
     | `card.${keyof ThemeCardColors}`
+    | `glow.${keyof ThemeGlowColors}`
     | `buttonPrimary.${keyof ThemeButtonColors}`
     | `buttonSecondary.${keyof ThemeButtonColors}`;
 

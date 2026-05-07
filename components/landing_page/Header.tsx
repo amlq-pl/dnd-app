@@ -12,7 +12,7 @@ export const Header = () => {
         <View style={styles.container}>
             {/* Background Layer: Decorative Icon */}
             <View style={styles.iconBackground}>
-                <BookIcon size={180} opacity={0.1} color={"palette.primary"}/>
+                <BookIcon size={160} opacity={0.35} color={"palette.primary"}/>
             </View>
 
             {/* TODO: consider changing the icon color}
@@ -50,13 +50,13 @@ const styles = StyleSheet.create({
     textContainer: {
         alignItems: "center",
         marginBottom: 16,
-        marginTop: 25,
+        marginTop: 50,
     },
     titleLine: {
         fontSize: 60,
         fontWeight: "800",
         textAlign: "center",
-        lineHeight: 62,
+        lineHeight: 64,
         // Implementation of the "Glow" effect
         textShadowColor: "rgba(255, 255, 255, 0.8)",
         textShadowOffset: { width: 0, height: 0 },

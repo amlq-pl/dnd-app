@@ -1,15 +1,15 @@
 import React from "react";
-import { View, ViewStyle, StyleProp } from "react-native";
-import { useAppTheme } from "@/hooks/useAppTheme";
+import { ViewStyle, StyleProp } from "react-native";
 import { ThemeColorKey } from "@/constants/themes";
+import { useStyles } from "@/hooks/useStyles";
+import { HighlightedView } from "./HighlightedView";
 
 interface BoxWithGlowProps {
     children: React.ReactNode;
     style?: StyleProp<ViewStyle>;
-    glow?: boolean
-    backgroundColor?: ThemeColorKey
-    glowColor?: ThemeColorKey
-
+    glow?: boolean;
+    backgroundColor?: ThemeColorKey;
+    glowColor?: ThemeColorKey;
 }
 
 export const BoxWithGlow = ({
@@ -17,38 +17,28 @@ export const BoxWithGlow = ({
     style,
     glow = true,
     backgroundColor = "card.background",
-    glowColor = "card.softGlow"
+    glowColor = "card.softGlow",
 }: BoxWithGlowProps) => {
-    const { theme, color } = useAppTheme();
-    const { spacing, borderRadius } = theme;
-
-    const themedStyles = {
+    const { styles } = useStyles((t, c) => ({
         container: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingHorizontal: t.spacing.md,
+            backgroundColor: c(backgroundColor),
+            borderRadius: t.borderRadius.md,
             height: 80,
-            paddingHorizontal: spacing.md,
-
-            backgroundColor: color(backgroundColor),
-            borderRadius: borderRadius.md,
-
-            // Glow styling
-            borderLeftWidth: 2,
-            borderLeftColor: glow ? color(glowColor) : "transparent",
-
-            shadowColor: color(glowColor),
-            shadowOffset: { width: 0, height: 0 },
-            shadowOpacity: 0.1,
-            shadowRadius: 15,
-
-            elevation: 4,
-        } as ViewStyle,
-    };
+        },
+    }));
 
     return (
-        <View style={[themedStyles.container, style]}>
+        <HighlightedView
+            glow={glow}
+            glowColor={glowColor}
+            style={[styles.container, style]}
+        >
             {children}
-        </View>
+        </HighlightedView>
     );
 };
