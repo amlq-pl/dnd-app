@@ -3,7 +3,11 @@ import { useStyles } from "@/hooks/useStyles";
 
 export default function InventoryScreen() {
     const { styles } = useStyles(() => ({
-        screen: { flex: 1, justifyContent: "center", alignItems: "center" },
+        screen: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+        },
     }));
 
     return (

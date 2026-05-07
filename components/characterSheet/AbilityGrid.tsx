@@ -8,9 +8,19 @@ import { useStyles } from "@/hooks/useStyles";
 
 export const AbilityGrid = ({ characterId }: { characterId: string }) => {
     const { styles } = useStyles((theme) => ({
-        abilityLabel: { fontSize: 10, fontWeight: "700" },
-        abilityScore: { fontSize: 30, fontFamily: theme.typography.headlineFont },
-        abilityMod: { fontSize: 20, fontWeight: "600", fontFamily: theme.typography.headlineFont },
+        abilityLabel: {
+            fontSize: 10,
+            fontWeight: "700",
+        },
+        abilityScore: {
+            fontSize: 30,
+            fontFamily: theme.typography.headlineFont,
+        },
+        abilityMod: {
+            fontSize: 20,
+            fontWeight: "600",
+            fontFamily: theme.typography.headlineFont,
+        },
     }));
 
     const { data: scores, loading } = useAbilities(characterId);
