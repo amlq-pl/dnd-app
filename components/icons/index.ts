@@ -1,4 +1,5 @@
 export {InspirationIcon} from  './inspirationIcon'
 export {ACIcon} from './ACIcon'
 export {HPIcon} from './HPIcon'
+export {RightArrowIcon} from './RightArrowIcon'
 export {SavingThrowsIcon} from './SavingThrowsIcon'
