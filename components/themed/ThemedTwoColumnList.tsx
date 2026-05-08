@@ -1,5 +1,5 @@
-import { useAppTheme } from "@/hooks/useAppTheme";
-import { StyleSheet, View, type ViewProps } from "react-native";
+import { useStyles } from "@/hooks/useStyles";
+import { View, type ViewProps } from "react-native";
 import { ThemedText } from "./ThemedText";
 
 export interface ListItem {
@@ -21,7 +21,23 @@ export function ThemedTwoColumnList({
     style,
     ...rest
 }: ThemedTwoColumnListProps) {
-    const { color } = useAppTheme();
+    const { styles, color } = useStyles((_, c) => ({
+        container: { paddingVertical: 8, width: "100%" },
+        header: { flexDirection: "row", alignItems: "center", marginBottom: 13, gap: 8 },
+        titleText: { fontSize: 22, lineHeight: 28 },
+        grid: { flexDirection: "row", justifyContent: "space-between", gap: 24 },
+        column: { flex: 1, gap: 12 },
+        itemRow: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderBottomWidth: 0.5,
+            borderBottomColor: c("border.subtle"),
+            paddingBottom: 4,
+        },
+        label: { fontSize: 16, opacity: 0.85 },
+        value: { fontSize: 16 },
+    }));
 
     // Split data into two columns
     const leftColumn = data.filter((_, i) => i % 2 === 0);
@@ -62,45 +78,3 @@ export function ThemedTwoColumnList({
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        paddingVertical: 8,
-        width: "100%",
-    },
-    header: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 13,
-        gap: 8,
-    },
-    titleText: {
-        fontSize: 22,
-        fontFamily: "serif",
-        lineHeight: 28,
-    },
-    grid: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        gap: 24,
-    },
-    column: {
-        flex: 1,
-        gap: 12,
-    },
-    itemRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderBottomWidth: 0.5,
-        borderBottomColor: "rgba(255, 255, 255, 0.05)",
-        paddingBottom: 4,
-    },
-    label: {
-        fontSize: 16,
-        opacity: 0.85,
-    },
-    value: {
-        fontSize: 16,
-    },
-});

@@ -1,11 +1,18 @@
 import React from "react";
-import { StyleSheet, View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { ThemedGrid, ThemedText } from "@/components/themed";
 import { BoxWithGlow } from ".././BoxWithGlow";
 import { useAbilities } from "@/hooks/character/useAbilities";
 import { ABILITY_LABELS } from "@/services/CharacterService";
+import { useStyles } from "@/hooks/useStyles";
 
 export const AbilityGrid = ({ characterId }: { characterId: string }) => {
+    const { styles } = useStyles((theme) => ({
+        abilityLabel: { fontSize: 10, fontWeight: "700" },
+        abilityScore: { fontSize: 30, fontFamily: theme.typography.headlineFont },
+        abilityMod: { fontSize: 20, fontWeight: "600", fontFamily: theme.typography.headlineFont },
+    }));
+
     const { data: scores, loading } = useAbilities(characterId);
 
     if (loading || !scores) return <ActivityIndicator />;
@@ -38,20 +45,6 @@ export const AbilityGrid = ({ characterId }: { characterId: string }) => {
         />
     );
 };
-
-const styles = StyleSheet.create({
-    abilityLabel: {
-        fontSize: 10,
-        fontWeight: "700",
-    },
-    abilityScore: {
-        fontSize: 30,
-    },
-    abilityMod: {
-        fontSize: 20,
-        fontWeight: "600",
-    },
-});
 
 // TODO: Change the glow and font color when the ability must be underlined
 // TODO: Change the font for the score to "Noto Serif"

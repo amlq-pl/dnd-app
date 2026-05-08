@@ -1,5 +1,5 @@
-import { View, type ViewProps, StyleSheet, Pressable } from "react-native";
-import { useAppTheme } from "@/hooks/useAppTheme";
+import { View, type ViewProps, Pressable } from "react-native";
+import { useStyles } from "@/hooks/useStyles";
 import { ThemedText } from "./ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -22,7 +22,28 @@ export function ThemedList({
     style,
     ...rest
 }: ThemedListProps) {
-    const { color } = useAppTheme();
+    const { styles, color } = useStyles((_, c) => ({
+        container: { width: "100%", marginVertical: 8 },
+        header: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 16 },
+        titleText: { fontSize: 24 },
+        listBody: { gap: 20 },
+        row: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+        labelContainer: { flexDirection: "row", alignItems: "center", gap: 12 },
+        bullet: { width: 8, height: 8, borderRadius: 4 },
+        bulletActive: { backgroundColor: c("semantic.warning") },
+        bulletInactive: { backgroundColor: c("border.subtle") },
+        bulletGlow: {
+            shadowColor: c("semantic.warning"),
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 1,
+            shadowRadius: 4,
+            elevation: 5,
+        },
+        skillLabel: { fontSize: 18, opacity: 0.9 },
+        skillValue: { fontSize: 18, fontWeight: "600" },
+        footer: { marginTop: 24, alignItems: "center" },
+        footerText: { letterSpacing: 1.5, fontWeight: "700", fontSize: 12 },
+    }));
 
     return (
         <View style={[styles.container, style]} {...rest}>
@@ -46,10 +67,9 @@ export function ThemedList({
                             <View
                                 style={[
                                     styles.bullet,
-                                    {
-                                        backgroundColor:
-                                            item.state === "active" ? "#FDE047" : "#374151",
-                                    },
+                                    item.state === "active"
+                                        ? styles.bulletActive
+                                        : styles.bulletInactive,
                                     item.state === "active" && styles.bulletGlow,
                                 ]}
                             />
@@ -79,24 +99,3 @@ export function ThemedList({
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: { width: "100%", marginVertical: 8 },
-    header: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 16 },
-    titleText: { fontSize: 24, fontFamily: "serif" },
-    listBody: { gap: 20 },
-    row: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-    labelContainer: { flexDirection: "row", alignItems: "center", gap: 12 },
-    bullet: { width: 8, height: 8, borderRadius: 4 },
-    bulletGlow: {
-        shadowColor: "#FDE047",
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 1,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    skillLabel: { fontSize: 18, opacity: 0.9 },
-    skillValue: { fontSize: 18, fontWeight: "600" },
-    footer: { marginTop: 24, alignItems: "center" },
-    footerText: { letterSpacing: 1.5, fontWeight: "700", fontSize: 12 },
-});

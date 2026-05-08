@@ -1,13 +1,23 @@
 import React from "react";
-import { StyleSheet, View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { ThemedGrid, ThemedText, ThemedView } from "@/components/themed";
 import { BoxWithGlow } from ".././BoxWithGlow";
 import { useBiometrics } from "@/hooks/character";
-import { useAppTheme } from "@/hooks/useAppTheme";
+import { useStyles } from "@/hooks/useStyles";
 
 export const BiometricsGrid = ({ characterId }: { characterId: string }) => {
     const { data: entries, isLoading } = useBiometrics(characterId);
-    const { theme, color } = useAppTheme();
+    const { styles, color } = useStyles((theme, c) => ({
+        loadingContainer: { height: 120, justifyContent: "center", alignItems: "center" },
+        textContainer: { flex: 1, justifyContent: "center" },
+        label: { fontSize: 10, fontWeight: "700", letterSpacing: 0.5, marginBottom: 2 },
+        value: {
+            fontSize: 18,
+            lineHeight: 24,
+            fontFamily: theme.typography.headlineFont,
+        },
+        decorationSpacer: { width: 10 },
+    }));
 
     if (isLoading || !entries) {
         return (
@@ -28,11 +38,7 @@ export const BiometricsGrid = ({ characterId }: { characterId: string }) => {
                         <ThemedText color="card.header" style={styles.label} variant="body">
                             {item.label.toUpperCase()}
                         </ThemedText>
-                        <ThemedText
-                            color="card.label"
-                            style={[styles.value, { fontFamily: theme.typography.headlineFont }]}
-                            variant="headline"
-                        >
+                        <ThemedText color="card.label" style={styles.value} variant="headline">
                             {item.value}
                         </ThemedText>
                     </View>
@@ -46,28 +52,3 @@ export const BiometricsGrid = ({ characterId }: { characterId: string }) => {
         />
     );
 };
-
-const styles = StyleSheet.create({
-    loadingContainer: {
-        height: 120,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    textContainer: {
-        flex: 1,
-        justifyContent: "center",
-    },
-    label: {
-        fontSize: 10,
-        fontWeight: "700",
-        letterSpacing: 0.5,
-        marginBottom: 2,
-    },
-    value: {
-        fontSize: 18, // Reduced from 30 to accommodate string length
-        lineHeight: 24,
-    },
-    decorationSpacer: {
-        width: 10, // Maintains the horizontal rhythm of the BoxWithGlow layout
-    },
-});

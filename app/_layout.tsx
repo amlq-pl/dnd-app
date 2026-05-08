@@ -1,7 +1,8 @@
+import { ThemeProvider } from "@/context/ThemeContext";
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { Stack } from "expo-router";
 
-export default function RootLayout() {
+function RootLayoutInner() {
     const { color } = useAppTheme();
 
     return (
@@ -13,5 +14,13 @@ export default function RootLayout() {
                 },
             }}
         />
+    );
+}
+
+export default function RootLayout() {
+    return (
+        <ThemeProvider>
+            <RootLayoutInner />
+        </ThemeProvider>
     );
 }

@@ -1,12 +1,5 @@
-import {
-    defaultThemeId,
-    getThemeById,
-    resolveColor,
-    type AppTheme,
-    type ThemeColorKey,
-    type ThemeId,
-} from "@/constants/themes";
-import { useMemo } from "react";
+import type { AppTheme, ThemeColorKey, ThemeId } from "@/constants/themes";
+import { useThemeContext } from "@/context/ThemeContext";
 
 export interface UseAppThemeOptions {
     themeId?: ThemeId;
@@ -21,22 +14,6 @@ export interface UseAppThemeResult {
     setThemeId: (nextThemeId: ThemeId) => void;
 }
 
-export function useAppTheme(options?: UseAppThemeOptions): UseAppThemeResult {
-    const activeThemeId = options?.themeId ?? defaultThemeId;
-
-    const theme = useMemo(() => getThemeById(activeThemeId), [activeThemeId]);
-
-    const color = (key: ThemeColorKey) => resolveColor(theme.colors, key);
-
-    const setThemeId = (_nextThemeId: ThemeId) => {
-        // Placeholder for future state/context-backed theme switching.
-    };
-
-    return {
-        themeId: activeThemeId,
-        theme,
-        mode: theme.mode,
-        color,
-        setThemeId,
-    };
+export function useAppTheme(_options?: UseAppThemeOptions): UseAppThemeResult {
+    return useThemeContext();
 }
