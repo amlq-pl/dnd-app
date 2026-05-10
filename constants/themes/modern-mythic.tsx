@@ -1,8 +1,6 @@
 import type { AppTheme } from "./index";
 import COLORS from "@/constants/colors";
 
-
-
 export const modernMythicTheme: AppTheme = {
     id: "modern-mythic",
     name: "Modern Mythic",
@@ -77,9 +75,9 @@ export const modernMythicTheme: AppTheme = {
 
     // ── Typography ────────────────────────────────────────────────────────
     typography: {
-        headlineFont: "notoSerif",
+        headlineFont: "notoSerif-semibold",
         bodyFont: "manrope",
-        labelFont: "manrope",
+        labelFont: "manrope-semibold",
     },
 
     // ── Spacing scale (dp) ────────────────────────────────────────────────

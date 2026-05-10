@@ -8,7 +8,6 @@ const VARIANT_STYLE: Record<TextVariant, TextStyle> = {
     headline: {
         fontSize: 28,
         lineHeight: 34,
-        fontWeight: "600",
     },
     body: {
         fontSize: 14,
@@ -17,7 +16,6 @@ const VARIANT_STYLE: Record<TextVariant, TextStyle> = {
     label: {
         fontSize: 16,
         lineHeight: 22,
-        fontWeight: "600",
     },
 };
 
@@ -32,7 +30,12 @@ export interface ThemedTextProps extends TextProps {
     color?: ThemeColorKey;
 }
 
-export function ThemedText({ style, variant = "body", color: colorKey, ...rest }: ThemedTextProps) {
+export function ThemedText({
+    style,
+    variant = "body",
+    color: colorKey,
+    ...rest
+}: ThemedTextProps) {
     const { theme, color } = useAppTheme();
 
     return (
