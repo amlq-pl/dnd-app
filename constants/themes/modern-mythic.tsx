@@ -1,6 +1,8 @@
 import type { AppTheme } from "./index";
 import COLORS from "@/constants/colors";
 
+
+
 export const modernMythicTheme: AppTheme = {
     id: "modern-mythic",
     name: "Modern Mythic",
@@ -52,18 +54,24 @@ export const modernMythicTheme: AppTheme = {
             label: COLORS.white,
             note: COLORS.subduedLila,
             glow: COLORS.lila,
-            softGlow: COLORS.subduedLila
+            softGlow: COLORS.subduedLila,
         },
+
+        glow: {
+            softGlow: COLORS.subduedLila,
+            goldGlow: COLORS.gold,
+            redGlow: COLORS.red,
+        },
+
         buttonPrimary: {
             background: COLORS.lessDirtyPurple,
             text: COLORS.lightLila,
-            border: COLORS.dirtyPurple
+            border: COLORS.dirtyPurple,
         },
         buttonSecondary: {
             background: COLORS.milky,
             text: COLORS.almostBlack,
-            border: COLORS.dirtyYellow
-
+            border: COLORS.dirtyYellow,
         },
     },
 
