@@ -5,7 +5,7 @@ import { useStyles } from "@/hooks/useStyles";
 import { useRouter } from "expo-router";
 import { ThemedText, ThemedView } from "@/components/themed";
 import { MainHeader } from "@/components/SheetsAndGigglesHeader";
-import { Input } from "@/components/signup&login/input"
+import { Input } from "@/components/signup&login/input";
 import { SocialPanel } from "@/components/signup&login/SocialPanel";
 
 export default function LoginScreen() {
@@ -14,7 +14,12 @@ export default function LoginScreen() {
     const router = useRouter();
 
     const { styles } = useStyles((t, c) => ({
-        screen: { flex: 1, justifyContent: "center", alignItems: "center", gap: 24 },
+        screen: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 24,
+        },
         scrollView: { flex: 1, alignSelf: "stretch" },
         scrollContentContainer: { flexGrow: 1 },
         content: {
@@ -24,33 +29,38 @@ export default function LoginScreen() {
             // gap: t.spacing.lg,
         },
         actionRow: {
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            marginBottom: t.spacing.xl, gap: t.spacing.lg,
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            marginBottom: t.spacing.xl,
+            gap: t.spacing.lg,
         },
         primaryButton: {
             backgroundColor: c("text.lively"),
             borderRadius: 50,
             paddingVertical: t.spacing.lg,
-            alignItems: 'center',
+            alignItems: "center",
             shadowColor: c("text.lively"),
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
             shadowRadius: 8,
             elevation: 5,
         },
-        buttonText: { fontSize: 18, fontWeight: '700', color: c("text.onSecondary") },
+        buttonText: {
+            fontSize: 18,
+            fontWeight: "700",
+            color: c("text.onSecondary"),
+        },
         footer: {
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
             marginTop: t.spacing.xxl,
             paddingBottom: t.spacing.xl,
         },
         footerLink: {
-            fontWeight: '700',
-        }
+            fontWeight: "700",
+        },
     }));
 
     const handleBeginAdventure = (email: string, password: string) => {
@@ -74,7 +84,6 @@ export default function LoginScreen() {
                 style={styles.scrollView}
             >
                 <ThemedView style={styles.content}>
-
                     <MainHeader />
 
                     <Input
@@ -86,45 +95,57 @@ export default function LoginScreen() {
 
                     {/** TODO: insert time is annoyingly short. consider doing something with it */}
                     <Input
+                        secureTextEntry
                         label="Password"
                         placeholder="••••••••"
-                        secureTextEntry
                         value={password}
                         onChangeText={setPassword}
                     />
 
                     <View style={styles.actionRow}>
                         <TouchableOpacity
-                            onPress={handleForgotPassword}
-                            activeOpacity={0.7}
-                            accessibilityRole="button"
                             accessibilityLabel="Forgot password"
+                            accessibilityRole="button"
+                            activeOpacity={0.7}
+                            onPress={handleForgotPassword}
                         >
-                            <ThemedText color="text.lively">Forgot password?</ThemedText>
+                            <ThemedText color="text.lively">
+                                Forgot password?
+                            </ThemedText>
                         </TouchableOpacity>
                     </View>
 
                     <TouchableOpacity
+                        activeOpacity={0.8}
                         style={styles.primaryButton}
                         onPress={() => handleBeginAdventure(email, password)}
-                        activeOpacity={0.8}
                     >
-                        <ThemedText style={styles.buttonText}>Begin Adventure</ThemedText>
+                        <ThemedText style={styles.buttonText}>
+                            Begin Adventure
+                        </ThemedText>
                     </TouchableOpacity>
 
-
                     <SocialPanel
-                        onPressApple={() => { console.log("Log via Google") }}
-                        onPressGoogle={() => { console.log("Log via Apple") }}
+                        onPressApple={() => {
+                            console.log("Log via Google");
+                        }}
+                        onPressGoogle={() => {
+                            console.log("Log via Apple");
+                        }}
                     />
 
-
                     <View style={styles.footer}>
-                        <ThemedText color="text.muted">New to the realm? </ThemedText>
+                        <ThemedText color="text.muted">
+                            New to the realm?{" "}
+                        </ThemedText>
                         <TouchableOpacity
+                            activeOpacity={0.7}
                             onPress={() => router.replace("/(tabs)/signup")}
-                            activeOpacity={0.7}>
-                            <ThemedText color="text.lively" style={styles.footerLink}>
+                        >
+                            <ThemedText
+                                color="text.lively"
+                                style={styles.footerLink}
+                            >
                                 Create an account
                             </ThemedText>
                         </TouchableOpacity>
