@@ -68,7 +68,7 @@ export default function LandingActionCard({ title, description, buttonText, colo
                     {title}
                 </ThemedText>
                 {icon}
-                
+
             </View>
 
             <ThemedText style={styles.description} color="text.body">

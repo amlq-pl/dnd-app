@@ -1,6 +1,8 @@
 import type { AppTheme } from "./index";
 import COLORS from "@/constants/colors";
 
+
+
 export const modernMythicTheme: AppTheme = {
     id: "modern-mythic",
     name: "Modern Mythic",

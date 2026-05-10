@@ -1,12 +1,12 @@
 import { ThemedText, ThemedView } from "@/components/themed";
 import { useStyles } from "@/hooks/useStyles";
 import { useRouter } from "expo-router";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView } from "react-native";
 import { useAppTheme } from "@/hooks/useAppTheme";
 
 import { CharacterIcon, PlusCircleIcon } from "@/components/icons";
 
-import { Header } from '@/components/landing_page/Header'
+import { MainHeader } from '@/components/SheetsAndGigglesHeader'
 import LandingActionCard from '@/components/landing_page/LandingActionCard'
 
 export default function LandingView() {
@@ -46,7 +46,7 @@ export default function LandingView() {
             >
                 <ThemedView style={styles.content}>
                     {/** HEADER */}
-                    <Header />
+                    <MainHeader />
 
                     {/** CHARACTER LIST */}
                     <LandingActionCard
