@@ -1,4 +1,5 @@
 import { ThemedHeadline, ThemedText, ThemedView, SpellCard } from "@/components/themed";
+import { SpellSlots } from "@/components/spells/SpellSlots";
 import { useStyles } from "@/hooks/useStyles";
 import { useSpells } from "@/hooks/useSpells";
 import { ScrollView } from "react-native";
@@ -22,10 +23,7 @@ export default function SpellsScreen() {
 
     return (
         <ThemedView backgroundColor="surface.background" style={styles.container}>
-            <ThemedHeadline color="text.heading" style={styles.headline}>
-                Spells
-            </ThemedHeadline>
-            {isLoading ? (
+            /*{/* {isLoading ? (
                 <ThemedView style={styles.empty}>
                     <ThemedText color="text.muted" variant="body">
                         Loading spells...
@@ -37,15 +35,19 @@ export default function SpellsScreen() {
                         No spells available.
                     </ThemedText>
                 </ThemedView>
-            ) : (
+            ) : ( */}
                 <ScrollView contentContainerStyle={styles.scrollContent}>
                     <ThemedView style={styles.list}>
+                        <SpellSlots />
+                        <ThemedHeadline color="text.heading" style={styles.headline}>
+                            Your Spells
+                        </ThemedHeadline>
                         {spells.map((spell) => (
                             <SpellCard key={spell.id} spell={spell} />
                         ))}
                     </ThemedView>
                 </ScrollView>
-            )}
+            {/* )} } */}
         </ThemedView>
     );
 }

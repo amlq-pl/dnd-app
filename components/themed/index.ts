@@ -6,4 +6,6 @@ export { ThemedTextBox } from "./ThemedTextBox";
 export { ThemedView } from "./ThemedView";
 export { ThemedList } from "./ThemedList";
 export {ThemedBoxList, type BoxListItem} from "./ThemedBoxList";
-export { SpellCard } from "./SpellCard";
+export { SpellCard } from "../spells/SpellCard";
+export { ShortSpellCard } from "../spells/ShortSpellCard";
+export { LongSpellCard } from "../spells/LongSpellCard";
