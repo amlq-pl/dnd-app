@@ -57,7 +57,9 @@ export default function MyAdventurers() {
                         <AdventurerCard key={adv.id} adv={adv} />
                     ))}
                     <TouchableOpacity style={styles.touchable}>
-                        <Image source={require("@/app/images/AddIcon.png")} />
+                        <Image
+                            source={require("@/assets/images/AddIcon.png")}
+                        />
                         <ThemedText color="card.glow" variant="body">
                             Create New Adventurer
                         </ThemedText>

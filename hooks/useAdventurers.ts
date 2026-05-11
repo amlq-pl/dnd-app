@@ -23,7 +23,7 @@ export default function useAdventurers() {
                 hp: 20,
                 maxHp: 21,
                 armorClass: 20,
-                image: require("@/app/images/Valerius.png"),
+                image: require("@/assets/images/Valerius.png"),
                 level: 12,
             },
             {
@@ -35,7 +35,7 @@ export default function useAdventurers() {
                 hp: 7,
                 maxHp: 15,
                 armorClass: 4,
-                image: require("@/app/images/Lyra.png"),
+                image: require("@/assets/images/Lyra.png"),
                 level: 5,
             },
             {
@@ -47,7 +47,7 @@ export default function useAdventurers() {
                 hp: 3,
                 maxHp: 15,
                 armorClass: 12,
-                image: require("@/app/images/Lyra.png"),
+                image: require("@/assets/images/Lyra.png"),
                 level: 13
             } ,         
             {
@@ -59,7 +59,7 @@ export default function useAdventurers() {
                 hp: 3,
                 maxHp: 15,
                 armorClass: 12,
-                image: require("@/app/images/Lyra.png"),
+                image: require("@/assets/images/Lyra.png"),
                 level: 11
             }
         ];

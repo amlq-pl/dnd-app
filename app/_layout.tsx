@@ -1,5 +1,7 @@
 import { ThemeProvider } from "@/context/ThemeContext";
+import { PERSIST_BUSTER, PERSIST_MAX_AGE, queryClient, queryPersister } from "@/lib/queryClient";
 import { useAppTheme } from "@/hooks/useAppTheme";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
@@ -23,14 +25,23 @@ function RootLayoutInner() {
     const { color } = useAppTheme();
 
     return (
-        <Stack
-            screenOptions={{
-                headerShown: false,
-                contentStyle: {
-                    backgroundColor: color("surface.background"),
-                },
+        <PersistQueryClientProvider
+            client={queryClient}
+            persistOptions={{
+                persister: queryPersister,
+                maxAge: PERSIST_MAX_AGE,
+                buster: PERSIST_BUSTER,
             }}
-        />
+        >
+            <Stack
+                screenOptions={{
+                    headerShown: false,
+                    contentStyle: {
+                        backgroundColor: color("surface.background"),
+                    },
+                }}
+            />
+        </PersistQueryClientProvider>
     );
 }
 

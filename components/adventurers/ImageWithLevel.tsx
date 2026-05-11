@@ -15,7 +15,7 @@ export default function ImageWithLevel({ image, level }: Props) {
             borderRadius: t.borderRadius.sm,
         },
         levelStub: {
-            width: 52,
+            minWidth: 52,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
