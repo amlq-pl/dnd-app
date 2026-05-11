@@ -94,7 +94,7 @@ sequenceDiagram
         RQ->>SB: select * from users where id = uid
         RQ-->>UI: refetched data when stale
     else no session
-        Boot->>UI: render landing (SocialAuth)
+        Boot->>UI: render landing (SocialPanel)
     end
 ```
 
