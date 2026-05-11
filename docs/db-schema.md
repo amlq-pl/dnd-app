@@ -39,6 +39,13 @@ The app stores user accounts, character sheets, reusable character catalogs, and
 - Computed game values (saving-throw totals, skill modifiers, etc.) are **not** stored. They are derived in app code from ability scores, level, and proficiency lists. Only the inputs are persisted.
 - Row-level security (RLS) is enabled on every table in the exposed `public` schema.
 
+## Migrations
+
+- Every schema change lives in `supabase/migrations/<UTC-yyyymmddHHMMSS>_<snake_case_description>.sql` **before** it is applied to any database. The filename layout matches what the Supabase CLI expects, so `supabase migration up` / `supabase db pull` can be adopted later without renaming.
+- Apply each file via the Supabase MCP `execute_sql` (or `supabase db query` once the CLI is wired up) so the SQL on disk is byte-for-byte what runs against the database.
+- After applying, run `get_advisors` (security + performance) and address any flagged issues.
+- **Never** edit a previously-applied migration. Write a follow-up file (the next UTC timestamp, descriptive name like `harden_users_rls_and_function.sql`) and apply it the same way.
+
 ## Entity relationships
 
 ```mermaid
@@ -65,7 +72,7 @@ graph LR
 - A `user` has many `characters`.
 - A `character` chooses one `race` and one `class`.
 - A `class` has many `subclasses`.
-- `features` belongs to exactly one origin: class, subclass, race, or character-scoped.
+- `features` belongs to exactly one origin: class, subclass, race, character, or background.
 - A `character` has many `character_features`.
 - A `character` has many `character_spell_slots`, `character_items`, and `character_spells`.
 - A `spell` can be learned by many characters via `character_spells`.
@@ -113,9 +120,7 @@ CREATE TYPE alignment AS ENUM (
   'chaotic_evil'
 );
 
-CREATE TYPE item_transfer_status AS ENUM ('pending', 'consumed', 'expired');
-
-CREATE TYPE feature_origin_type AS ENUM ('class', 'subclass', 'race', 'character');
+CREATE TYPE feature_origin_type AS ENUM ('class', 'subclass', 'race', 'character', 'background');
 
 CREATE TYPE feature_assignment_source AS ENUM ('creation', 'level_up', 'adventure');
 ```
@@ -376,7 +381,10 @@ CREATE TABLE features (
     (origin_type = 'class' AND class_id IS NOT NULL AND subclass_id IS NULL AND race_id IS NULL)
     OR (origin_type = 'subclass' AND class_id IS NOT NULL AND subclass_id IS NOT NULL AND race_id IS NULL)
     OR (origin_type = 'race' AND class_id IS NULL AND subclass_id IS NULL AND race_id IS NOT NULL)
-    OR (origin_type = 'character' AND class_id IS NULL AND subclass_id IS NULL AND race_id IS NULL)
+    OR (
+      origin_type IN ('character', 'background')
+      AND class_id IS NULL AND subclass_id IS NULL AND race_id IS NULL
+    )
   ),
   CHECK (
     (
@@ -384,7 +392,7 @@ CREATE TABLE features (
       AND min_character_level IS NOT NULL
     )
     OR (
-      origin_type IN ('race', 'character')
+      origin_type IN ('race', 'character', 'background')
       AND min_character_level IS NULL
     )
   )
@@ -679,6 +687,8 @@ CREATE POLICY character_features_delete_own ON character_features
 
 The app/service must still validate feature eligibility before insert (origin match, subclass match, and level requirement).
 
+Expected `assigned_source` per origin: `class` and `subclass` use `creation` or `level_up`; `race` and `background` use `creation`; `character` is reserved for features acquired during play and uses `adventure`. The DB does not enforce this — validate in the service layer.
+
 ## `v_character_features`
 
 Resolved feature list per character. Use this view to query what a character currently has.
@@ -878,17 +888,23 @@ Shared catalog. One row per spell, readable by all authenticated users.
 
 ```sql
 CREATE TABLE spells (
-  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name         TEXT NOT NULL UNIQUE,
-  level        SMALLINT NOT NULL CHECK (level BETWEEN 0 AND 9),
-  casting_time TEXT NOT NULL,
-  range        TEXT NOT NULL,
-  duration     TEXT NOT NULL,
-  rolls        TEXT NOT NULL DEFAULT 'NA',
-  concentration BOOLEAN NOT NULL DEFAULT false,
-  description  TEXT NOT NULL,
-  created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name            TEXT NOT NULL UNIQUE,
+  level           SMALLINT NOT NULL CHECK (level BETWEEN 0 AND 9),
+  school_of_magic TEXT NOT NULL,
+  casting_time    TEXT NOT NULL,
+  range           TEXT NOT NULL,
+  duration        TEXT NOT NULL,
+  components      TEXT[] NOT NULL DEFAULT '{}',
+  ritual          BOOLEAN NOT NULL DEFAULT false,
+  concentration   BOOLEAN NOT NULL DEFAULT false,
+  saving_throw    BOOLEAN NOT NULL DEFAULT false,
+  rolls           TEXT NOT NULL DEFAULT 'NA',
+  damage_type     TEXT NOT NULL DEFAULT 'NA',
+  tag             TEXT NOT NULL DEFAULT '',
+  description     TEXT NOT NULL,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE TRIGGER set_updated_at
@@ -902,9 +918,15 @@ CREATE INDEX spells_level_idx ON spells (level);
 
 - `name` - globally unique in the catalog.
 - `level` - `0` for cantrips, otherwise `1`-`9`.
+- `school_of_magic` - one of the eight 5e schools (`Abjuration`, `Conjuration`, `Divination`, `Enchantment`, `Evocation`, `Illusion`, `Necromancy`, `Transmutation`). Stored as free text so homebrew schools are allowed.
 - `casting_time`, `range`, `duration` - human-readable rules text such as `1 bonus action`, `Self (30-foot cone)`, or `Concentration, up to 1 minute`.
-- `rolls` - dice expression used by the app to highlight spell effects such as damage or healing, e.g. `4d6`. Use `NA` when no roll applies.
+- `components` - array of component letters such as `{V,S,M}`. Use entries like `'M (a pinch of dust)'` when a material specific is worth recording.
+- `ritual` - whether the spell can be cast as a ritual.
 - `concentration` - whether the spell requires concentration.
+- `saving_throw` - whether the spell calls for a saving throw from the target.
+- `rolls` - dice expression used by the app to highlight spell effects such as damage or healing, e.g. `4d6`. Use `NA` when no roll applies.
+- `damage_type` - damage type (e.g. `fire`, `radiant`). Use `NA` when the spell deals no damage.
+- `tag` - free-form short tag for app-side filtering or grouping. `''` when unused.
 - `description` - full rules text.
 
 ### RLS policies
@@ -1025,71 +1047,62 @@ Supabase can return nested related data through foreign-key relationships, or th
 
 Players will be able to hand items to each other in person by having one player generate a QR code and the other scan it.
 
+Sharing is intentionally non-destructive: the DB does not enforce single-use, does not remove the item from the sender, and does not block multiple receivers from scanning the same QR before it expires. Players coordinate the rest in person.
+
 Sketch of the flow:
 
-1. **Sender** picks a row from `character_items` and taps "transfer". The app creates a short-lived `item_transfers` row with the item id, an item snapshot, and a one-time token, then renders a QR code containing that token.
-2. **Receiver** scans the QR code. The app validates the token against `item_transfers` and runs an atomic transfer:
+1. **Sender** picks a row from `character_items` and taps "share". The app builds a JSON snapshot from that row, generates a one-time token, inserts a row into `item_shares`, and renders a QR code containing the token.
+2. **Receiver** scans the QR code. The app fetches the matching `item_shares` row by token, validates `expires_at > now()`, and inserts a fresh copy into the receiver's own inventory:
 
    ```sql
-   UPDATE character_items
-   SET character_id = :receiver_character_id,
-       attuned = false
-   WHERE id = :item_id
-     AND character_id = :sender_character_id;
+   INSERT INTO character_items (character_id, name, description, requires_attunement, attuned)
+   VALUES (:receiver_character_id,
+           :snapshot_name,
+           :snapshot_description,
+           :snapshot_requires_attunement,
+           false);
    ```
 
-3. The `item_transfers` row is marked `consumed` so the QR cannot be reused.
+3. The sender's `character_items` row is left untouched. The sender can manually delete their copy if they consider the item handed over.
+4. The share row may be deleted by the receiver after a successful copy or left to expire — neither is enforced.
 
-Planned `item_transfers` table (not implemented yet):
+`attuned` defaults to `false` on the new row via the existing `character_items` column default, so the 5e expectation that the new owner must attune themselves is preserved automatically.
+
+Planned `item_shares` table (not implemented yet):
 
 ```sql
-CREATE TABLE item_transfers (
-  id                       UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  token                    TEXT NOT NULL UNIQUE,
-  item_id                  UUID NOT NULL REFERENCES character_items(id),
-  from_user_id             UUID NOT NULL REFERENCES users(id),
-  from_character_id        UUID NOT NULL REFERENCES characters(id),
-  item_snapshot            JSONB NOT NULL,
-  status                   item_transfer_status NOT NULL DEFAULT 'pending',
-  expires_at               TIMESTAMPTZ NOT NULL,
-  created_at               TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at               TIMESTAMPTZ NOT NULL DEFAULT now(),
-  consumed_at              TIMESTAMPTZ,
-  consumed_by_user_id      UUID REFERENCES users(id),
-  consumed_by_character_id UUID REFERENCES characters(id)
+CREATE TABLE item_shares (
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  token             TEXT NOT NULL UNIQUE,
+  from_user_id      UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  from_character_id UUID NOT NULL REFERENCES characters(id) ON DELETE CASCADE,
+  item_snapshot     JSONB NOT NULL,
+  expires_at        TIMESTAMPTZ NOT NULL,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TRIGGER set_updated_at
-  BEFORE UPDATE ON item_transfers
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
-
-CREATE INDEX item_transfers_expires_at_idx ON item_transfers (expires_at);
-CREATE INDEX item_transfers_item_id_idx ON item_transfers (item_id);
+CREATE INDEX item_shares_expires_at_idx ON item_shares (expires_at);
+CREATE INDEX item_shares_from_user_id_idx ON item_shares (from_user_id);
 ```
 
-`item_snapshot` remains JSONB intentionally. Transfer history should preserve what was shown in the QR flow even if the live `character_items` row changes later.
+`item_snapshot` is JSONB so the share is self-contained and stable even if the sender edits or deletes the original `character_items` row before the receiver scans.
 
-**TTL expiry:** PostgreSQL has no native TTL index. Expired rows can be cleaned up via a `pg_cron` scheduled job or handled in app code before reads.
+**TTL expiry:** PostgreSQL has no native TTL index. Stale rows can be cleaned up via a `pg_cron` job filtering on `expires_at < now()`, or ignored at read time by checking `expires_at`.
 
 **RLS policies (when added):**
 
 ```sql
-ALTER TABLE item_transfers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE item_shares ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY item_transfers_sender_select ON item_transfers
-  FOR SELECT USING (from_user_id = auth.uid());
+CREATE POLICY item_shares_sender_all ON item_shares
+  FOR ALL USING (from_user_id = auth.uid())
+  WITH CHECK (from_user_id = auth.uid());
 
-CREATE POLICY item_transfers_sender_insert ON item_transfers
-  FOR INSERT WITH CHECK (from_user_id = auth.uid());
-
-CREATE POLICY item_transfers_receiver_select ON item_transfers
-  FOR SELECT USING (consumed_by_user_id = auth.uid());
+CREATE POLICY item_shares_authenticated_select ON item_shares
+  FOR SELECT USING (auth.role() = 'authenticated');
 ```
 
-Notes:
-
-- The transfer table is separate from `character_items` so the app has an audit trail and a natural place to store short-lived QR tokens.
-- `attuned` is reset on transfer because 5e rules require the new owner to attune themselves.
+Senders retain full control over their own shares (insert, select, update, delete). Any authenticated user may SELECT a share — the unguessable `token` is the access gate for receivers, and inserting the resulting copy into `character_items` is governed by the existing `character_items_insert_own` policy.
 
 ## Follow-ups (out of scope for this document)
 
@@ -1098,5 +1111,6 @@ Notes:
 - Repository / data-access layer to replace the mock `*Service` files in `services/`.
 - Google and Apple OAuth integration via Supabase Auth (sign-up, sign-in, account linking).
 - Class-feature data (currently a static registry in `services/ClassService.ts`); promote to tables when needed.
-- `item_transfers` table and the QR-code transfer flow described under [Planned features](#qr-code-item-transfer).
-- `pg_cron` job for expiring stale `item_transfers` rows.
+- `item_shares` table and the QR-code share flow described under [Planned features](#qr-code-item-transfer).
+- `pg_cron` job for expiring stale `item_shares` rows.
+- See [local-state.md](local-state.md) for how the app caches and syncs these tables on-device.

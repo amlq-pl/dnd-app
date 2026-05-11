@@ -125,14 +125,7 @@ export default function LoginScreen() {
                         </ThemedText>
                     </TouchableOpacity>
 
-                    <SocialPanel
-                        onPressApple={() => {
-                            console.log("Log via Google");
-                        }}
-                        onPressGoogle={() => {
-                            console.log("Log via Apple");
-                        }}
-                    />
+                    <SocialPanel />
 
                     <View style={styles.footer}>
                         <ThemedText color="text.muted">
