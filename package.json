@@ -16,6 +16,7 @@
     "@expo-google-fonts/noto-serif": "^0.4.2",
     "@expo/vector-icons": "^15.0.3",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "11.4.1",
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
@@ -53,6 +54,7 @@
     "eslint-config-expo": "~10.0.0",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.2",
+    "supabase": "^2.98.2",
     "typescript": "~5.9.2"
   },
   "private": true

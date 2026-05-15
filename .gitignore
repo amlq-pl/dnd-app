@@ -48,3 +48,6 @@ app-example
 # generated native folders
 /ios
 /android
+
+# Supabase local temp (contains project ref)
+supabase/.temp/
